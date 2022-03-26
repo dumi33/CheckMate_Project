@@ -13,3 +13,6 @@
     - face_align.py : 정규화 파일
     - model_store.py, model_zoo.py : 모델 찾는 파일
     - model_func.py : 직접적인 실행 함수들이 담긴 파일
+
+- **pretrain model**-   
+    https://github.com/deepinsight/insightface
