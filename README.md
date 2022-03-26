@@ -1,3 +1,8 @@
 # CheckMate_Project
-RetinaFace, ArcFace를 이용한 얼굴인식 웹서비스입니다. 
 
+RetinaFace, ArcFace를 이용한 얼굴인식 출석확인 웹서비스입니다. 
+
+
+DB : mongoDB
+backend : Flask
+frontend : vue
