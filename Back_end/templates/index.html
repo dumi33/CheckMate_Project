@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHECKMATE Kakao OAuth </title>
+</head>
+<body>
+    <form method="post" action="http://localhost:8080/class">
+        <center>
+            <h1>수업추가</h1>
+            수업이름 : <input type="text" name="class_name"/> <br>
+            학생: <input type="text" name="student"/><br><br>
+            <input type="submit"/>
+            <div id="kakao" class="kakao_button">
+                <img src="/Back_end/templates/logo.png" alt="kakao oauth" />
+                <span>카카오 로그인</span>
+            </div>
+            <!--<button type="button" class="btm_image" id="img_btn", onclick="window.open('http://localhost:8080/oauth/url');"><img src="logo.png"></button>
+            -->
+            </center>
+    </form>
+</body>
+<script src='main.js'></script>
+</html>
