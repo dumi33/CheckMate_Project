@@ -27,7 +27,7 @@ from ai_model import Embedding
 app = Flask(__name__) # 객체 생성 
 
 
-conn = pymongo.MongoClient()
+conn = pymongo.MongoClient('mongodb://user:checkmate12!@3.35.24.5:27017')
 mydb = conn.CHECKMATE
 Class =mydb.Class
 Student =mydb.Student
