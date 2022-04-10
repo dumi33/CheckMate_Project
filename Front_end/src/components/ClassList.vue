@@ -1,49 +1,123 @@
 <template>
+<div>
   <ClassHeader />
   <div class = "class_all">
-  <div class ="class_list">
-      <h2>수업 이름</h2>
-      <div class="class_capture">
-          <button type = "button" id="capture_btn">캡처</button>
-    </div>
-    <div class = "btn_a">
-      <button type = "button" id="check_btn">출석확인</button>
-      <button type = "button" @click="ClassHome()" id="home_btn">홈화면</button>
-    </div>
-  </div>
-  <div class ="student_list">
-      <div class = "check_std">
-        <p>출석 학생 리스트</p>
-        <div id = "check_db_list">
-                학생 리스트---
-                {{ student }}
+    <div class ="class_list">
+        <h2>{{className}}</h2>
+        <div class="class_capture">
+            <button @click ="CaptureImage()" type = "button" id="capture_btn">캡처</button>
+            <img id = "cap_img" src = this.img>
         </div>
-      </div>
-      <div class = "uncheck_std">
-            <p>결석 학생 리스트</p>
-            <div id = "uncheck_db_list">
-                학생 리스트---
-                {{ unstudent }}
-            </div>
-      </div>
-      <button type = "button" id="excel_btn">EXCEL</button>
+        <div class = "btn_a">
+        <button type = "button" @click="CheckStd()" id="check_btn">출석확인</button>
+        <button type = "button" @click="ClassHome()" id="home_btn">홈화면</button>
+        </div>
+    </div>
+    <div class ="student_list">
+        <div class = "check_std">
+            <p>출석 학생 리스트</p>
+            <tr id = "check_db_list" v-for="checkItem in checkStdList" v-bind:key="checkItem.id">
+                <td>{{ checkItem.name }}</td>
+            </tr>
+        </div>
+        <div class = "uncheck_std">
+                <p>결석 학생 리스트</p>
+                <tr id = "uncheck_db_list" v-for="uncheckItem in uncheckStdList" v-bind:key="uncheckItem.id">
+                    <td>{{ uncheckItem.name }}</td>
+                    <button type = "button" @click="StdCheck(uncheckItem.id)" id ="stdcheck_btn">관리</button>
+                </tr>
+        </div>
+        <button type = "button" id="excel_btn" @click="downloadExcel()">EXCEL</button>
+    </div>
   </div>
-  </div>
+</div>
 </template>
 
 <script>
-  import ClassHeader from './common/ClassHeader.vue'
+    import ClassHeader from './common/ClassHeader.vue'
+    import XLSX from 'xlsx';
 
   export default {
     name: 'ClassRegister',
+    data: function() {
+      return {
+        img : '',
+        StdList : [],
+        checkStdList : [],
+        uncheckStdList : [],
+        className:''
+      };
+    },
     components: {
       ClassHeader
-    }, methods: {
+    },
+    methods: {
+        getStdList() {
+          // Http get 메서드로 요청
+            this.axios.get('/class/list/std' + this.$router.query.classId).then((res)=>{
+            console.log(res);
+            this.className = res.data.className
+            this.checkStdList = res.data.CheckStd
+            this.uncheckStdList = res.data.uncheckStd
+          }).catch((err) => {
+            console.log(err);
+            });
+        },
+        CaptureImage() {
+            // import pyautogui from pyautogui  
+
+            // html2canvas(document.body).then(canvas => {
+            //     document.body.appendChild(canvas);
+            // });
+            // html2canvas(document.body).then(canvas => {
+            //     const link = document.createElement('a')
+            //     link.download = 'filename'
+            //     link.href = canvas.toDataURL()
+            //     document.body.appendChild(link)
+            //     link.click()
+            // });
+        },
+        CheckStd() {
+            this.axios.post("/class/list",{img: this.img, classId: this.$router.query.classId} ).then((res)=>{
+                console.log(res);
+                this.checkStdList = res.data.CheckStd
+                this.uncheckStdList = res.data.uncheckStd
+            }).catch((err) => {
+                console.log(err);
+            });
+        },
+        async StdCheck(uncheckId) {
+            var result = confirm("출석체크하시겠습니까?");
+            if (result) {
+                try {
+                    this.axios.put("/class/list/" + uncheckId, uncheckId).then((res) => {
+                        console.log(res.data.success);
+                        if (res.data.success == true) {
+                            alert("출석체크되었습니다.");
+                            this.getStdList();
+                        } else {
+                            alert("출석체크되지 않았습니다.");
+                        }
+                    })
+                } catch(err) {
+                    console.log(err);
+                    alert("수정되지 않았습니다.");
+                }
+            }
+        },
+        downloadExcel() {
+            var checkData = XLSX.utils.json_to_sheet(this.checkStdList); // this.items 는 json object 를 가지고있어야함 
+            var uncheckData = XLSX.utils.json_to_sheet(this.uncheckStdList);
+            var workBook = XLSX.utils.book_new(); // 새 시트 생성 
+            XLSX.utils.book_append_sheet(workBook, checkData, '출석'); // 시트 명명, 데이터 지정
+            XLSX.utils.book_append_sheet(workBook, uncheckData, '결석');
+            XLSX.writeFile(workBook, 'check_list.xlsx');
+        },
         ClassHome() {
           this.$router.push('/');
         }
     }
-  }
+}
 </script>
 
 <style scoped>
@@ -169,7 +243,7 @@
 }
 
 .check_std p {
-    display: inline-block;
+    display: block;
     margin: 10px;
     margin-left: 30px;
     font-size: 20px;
@@ -178,13 +252,14 @@
 }
 
 #check_db_list {
+    display: block;
     margin: 10px;
     margin-left: 60px;
     font-size: 15px;
 }
 
 .uncheck_std p {
-    display: inline-block;
+    display: block;
     margin: 10px;
     margin-left: 30px;
     font-size: 20px;
@@ -193,10 +268,21 @@
 }
 
 #uncheck_db_list {
+    display: block;
     margin: 10px;
     margin-left: 60px;
     font-size: 15px;
 }
 
+#stdcheck_btn{
+    display: inline-block;
+    text-align: center;
+    background:linear-gradient(to bottom, #4949e87c,#4949e8d0);
+    color: white;
+    height: 20px;
+    border-radius: 5px;
+    font-size: 15px;
+    border-color: #ffffff7c;
+}
 
 </style>

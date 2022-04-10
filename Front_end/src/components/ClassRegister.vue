@@ -1,27 +1,60 @@
 <template>
   <ClassHeader />
   <div class ="class_reg">
-      <input type ="text" name = "class_name" id="class_name" placeholder="수업 이름 입력">
+      <input v-model="class_name" type ="text" name = "class_name" id="class_name" placeholder="수업 이름 입력">
   </div>
   <div class ="student_reg">
     <p>학생 등록</p>
-    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-    </svg>
+      <svg @click="selectUploadFile()" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+      </svg>
   </div>
   <button type = "button" @click="ClassRegisterCreate()" id="reg_btn">등록</button>
 </template>
 
 <script>
   import ClassHeader from './common/ClassHeader.vue'
-
+  
   export default {
     name: 'ClassRegister',
+    data: function() {
+      return {
+        class_name : '',
+        studentList : [],
+        response: ''
+      };
+    },
     components: {
       ClassHeader
     }, methods: {
+        selectUploadFile() {
+          var vue = this
+          let elem = document.createElement('input')
+          elem.id = 'imae'
+          elem.type = 'file'
+          elem.accept = 'image/*'
+          elem.multiple = true
+          elem.click();
+          elem.onchange = function() {
+            const formData = new FormData()
+            for (var index = 0; index < this.files.length; index++) {
+              formData.append('fileList', this.files[index])
+            }
+            this.axios.post('/class/register', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(response => {
+              vue.response = response.data
+            }).catch(error => {
+              vue.response = error.message
+            })
+          }
+        },
         ClassRegisterCreate() {
-          this.$router.push('/');
+          let classItem = { class_name : this.class_name, studentList: this.studentList};
+          this.axios.post("/class/register", classItem).then((res)=>{
+            console.log(res);
+            this.$router.push('/');
+          }).catch((err) => {
+            console.log(err);
+          });
         }
     }
   }

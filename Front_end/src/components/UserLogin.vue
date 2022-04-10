@@ -4,10 +4,10 @@
     <div class = "login_block">
         <h2>CheckMate</h2>
         <div class = "login_id">
-            <input type ="text" name = "login_id" id="login_id" placeholder="ID">
+            <input type ="text" ref = "login_id" name = "login_id" id="login_id" v-model = "user_id" placeholder="ID">
         </div>
         <div class ="login_pw">
-            <input type ="text" name = "login_pw" id="login_pw" placeholder="Password">
+            <input type ="text" ref = "login_pw" name = "login_pw" id="login_pw" v-model = "user_pw" placeholder="Password">
         </div>
         <div class="login_submit">
             <button type = "button" @click="LoginCreate()" id="login_btn" value="로그인">로그인</button>
@@ -22,14 +22,42 @@
 <script>
 export default {
     name: 'UserLogin',
+    data: function() {
+        return {
+            user_id : '',
+            user_pw : ''
+        };
+    },
     methods: {
         LoginCreate() {
-            this.$router.push('/');
+            let userInfo = {user_id : this.user_id, user_pw: this.user_pw}; 
+            // 값이 입력되지 않을 때
+            if(this.user_id == "") {
+                alert("아이디를 입력하세요");
+                this.$refs.login_id.focus();
+                return;
+            }else if (this.user_pw == "") {
+                alert("패스워드를 입력하세요.");
+                this.$refs.login_pw.focus();
+                return;
+            }
+            // loginStore의 doLogin() 메서드 호출
+            // login 성공시 return Url로 이동, 실패시 에러메세지
+            this.$store.dispatch("loginStore/doLogin", userInfo).then(() => {
+                const returnUrl = window.location.search.replace(/^\?returnUrl=/, "");
+                console.log(returnUrl)
+                this.$router.push({path: returnUrl, query: {user_id: this.user_id}});
+            }).catch((err) => {
+                this.errorMessage = err.response.data.errormessage;
+            });
         },
         LoginUserRegister(){
             this.$router.push('/register')
         }
-    }
+    },
+    mounted() {
+		this.$refs.login_id.focus()
+	}
 }
 </script>
 

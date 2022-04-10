@@ -1,4 +1,5 @@
 <template>
+<div>
   <ClassHeader />
   <div class ="reg_class">
     <p>수업 등록</p>
@@ -11,15 +12,18 @@
     <ul class ="class_list">
     <li>
       <div class ="list_name">
-        <p id ="class_name">수업명</p>
-        <div class = "list_btn">
-          <button type = "button" @click="ClassManagement()" id ="reg_btn">관리</button>
-          <button type = "button" @click="ClassSelect()" id="select_btn">선택</button>
+        <tr v-for="classItem in classList" v-bind:key="classItem.id">
+          <td id ="class_name">{{classItem.class_name}}</td>
+          <div class = "list_btn">
+            <button type = "button" @click="ClassManagement(classItem)" id ="reg_btn">관리</button>
+            <button type = "button" @click="ClassSelect(classItem)" id="select_btn">선택</button>
         </div>
+        </tr>
       </div>
     </li>
     </ul>
   </div>
+</div>
 </template>
 
 <script>
@@ -30,19 +34,35 @@
     components: {
       ClassHeader
     },
+    data : function(){
+      return {
+        classList : []
+      };
+    },
     methods: {
+        getClassList() {
+          // Http get 메서드로 요청
+            this.axios.get('/' + this.$router.query.user_id, 
+            {params : {
+              user_id : this.$router.query.user_id
+            }}).then((res)=>{
+            console.log(res);
+            this.classList = res.data.data
+          }).catch((err) => {
+            console.log(err);
+          });
+        },
         ClassRegister() {
           this.$router.push('/class/register');
         },
-        ClassManagement() {
-          this.$router.push('/class/setting')
+        ClassManagement(classItem) {
+          this.$router.push({path: '/class/setting', query : {classId : classItem.class_id}} )
         },
-        ClassSelect() {
-          this.$router.push('/class/list');
+        ClassSelect(classItem) {
+          this.$router.push({path: '/class/list', query : {classId : classItem.class_id}});
         }
-    },
-    data() {
-      
+    },mounted() {
+      this.getClassList();
     }
   }
 </script>

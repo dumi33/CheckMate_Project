@@ -17,7 +17,12 @@
 </template>
 <script>
 export default{
-
+    name: 'HeaderName',
+    data : function() {
+        return {
+            name: this.$store.state.loginStore.user_name
+        };
+    }
 }
 </script>
 
