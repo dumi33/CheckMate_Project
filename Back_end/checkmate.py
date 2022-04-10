@@ -14,6 +14,7 @@ from flask_jwt_extended import (
     unset_jwt_cookies, create_refresh_token
 )
 
+from bson import json_util
 import os # aim_model이 같은 디렉토리에 있어서 path를 앞에 붙임 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -34,9 +35,12 @@ Student =mydb.Student
 User = mydb.Users
 
 
-@app.route("/")
-def index():
-    return render_template('index2.html')
+@app.route("/", methods=['GET'])
+def getClassList():
+    Class_Read=list(Class.find({}))
+    print(Class_Read)
+    return json.dumps(Class_Read, default=json_util.default)
+    #return render_template('../Front_end/ClassMain.vue')
 
 
 # 버튼을 클릭하면 여기로 
@@ -93,6 +97,9 @@ def oauth_api():
 @app.route("/class/login")
 def helloUser() :
     return render_template('Create_class.html')
+
+
+
 
 def AddStduentImg () :
             dir_path = filedialog.askdirectory(initialdir="/",title='Please select a directory')
@@ -165,6 +172,6 @@ def ClassNameChange(classIdx) :
     
 
 if __name__ == "__main__" :
-    app.run(host="0.0.0.0", port = "8080")
+    app.run(host="0.0.0.0", port = "8090")
 
 
