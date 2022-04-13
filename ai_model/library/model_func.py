@@ -118,7 +118,7 @@ def print_ID_results(evaluation_embs:list, app : FaceAnalysis, img_fpath: str, e
         # check if any dist is greater than 0.5, and if so, print the results
         no_of_matching_faces = np.sum([1 if d <=0.5 else 0 for d in dists[0]])
         if no_of_matching_faces > 0:
-            print(f"Matching face(s) {i} found in database! dist : {dists}")
+            print(f"Matching face(s) {no_of_matching_faces} found in database! dist : {dists}")
             verbose = True
         else: 
             print(f"No matching face(s) not found in database! dist : {dists}")

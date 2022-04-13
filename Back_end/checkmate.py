@@ -98,7 +98,6 @@ def helloUser() :
 
 
 def AddStduentImg () :
-    
     dir_path = filedialog.askdirectory(initialdir="/",title='Please select a directory')
     return dir_path
         
@@ -139,10 +138,11 @@ def CreateStduent(classIdx) :
     if request.method =='POST' :
         label = []
         Img_students_addr = AddStduentImg() # 학생들의 사진 폴더를 선택 
-        evaluation_labels = os.listdir(Img_students_addr) # 사진들의 이름을 추출
+        evaluation_labels = os.listdir(Img_students_addr) # 사진들의 이름을 추출 
         for evaluation_label in evaluation_labels :  # 확장자 제거 
             label.append(evaluation_label.rsplit('_')[0])
         studentList = []
+        
         for i in range(len(label)) :
             seq = getNextSequenceSTD()
             student= {"studentIdx" : seq,
@@ -157,7 +157,12 @@ def CreateStduent(classIdx) :
             
             studentList.append(student)
         
-        
+        #  학생들을 입력받을 때 class에 학생들의 사진경로를 추가
+        Class.update_one({"classIdx" : classIdx}, 
+                {   "$set" :
+                    {"studentImgAddr" : Img_students_addr}
+                }
+            ) 
         return make_response(jsonify(SUCCESS=True,data=studentList),200)
     
 # student 제거  
@@ -265,14 +270,15 @@ def PostCapture() :
     
 
 # 출석확인  
-@app.route("/checks/attendance",methods=['POST'])
-def PostCheck() :
-    if request.method =='POST' :
-        global dir_path 
+@app.route("/checks/attendance/<int:classIdx>",methods=['GET'])
+def PostCheck(classIdx) :
+    if request.method =='GET' :
         capture_addr = 'C:/Users/dumi3/checkmate_project2/CheckMate_Project/capture_img.png'
-        # 학생들의 임베딩값 추출 & 출석확인 
-        result = Embedding.Create_Check(dir_path, capture_addr)
-        return make_response(jsonify(SUCCESS=True,data = result),200)
+        data = list(Class.find({"classIdx" : classIdx})) # 해당 클래스정보 
+        student_img_addr = data[0]['studentImgAddr'] # 해당 클래스의 학생 이미지 경로
+        # 학생들의 임베딩값 추출 & 출석확인
+        Embedding.Create_Check(student_img_addr, capture_addr)
+        return make_response(jsonify(SUCCESS=True),200)
 
     
 
