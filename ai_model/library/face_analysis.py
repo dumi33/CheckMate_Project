@@ -30,7 +30,7 @@ Face.__new__.__defaults__ = (None, ) * len(Face._fields)
 class FaceAnalysis:
     # 생성자 함수
     # 모델 경로 ~/.insightface/models/name 폴더 내에 위치
-    def __init__(self, name, root='./face_model'):
+    def __init__(self, name, root='ai_model\\face_model'):
         self.models = {}
         root = os.path.abspath(root) # 모델 위치
         print(root)
