@@ -30,7 +30,7 @@ export default {
     },
     methods: {
         LoginCreate() {
-            let userInfo = {user_id : this.user_id, user_pw: this.user_pw}; 
+            // let userInfo = {user_id : this.user_id, user_pw: this.user_pw}; 
             // 값이 입력되지 않을 때
             if(this.user_id == "") {
                 alert("아이디를 입력하세요");
@@ -43,13 +43,14 @@ export default {
             }
             // loginStore의 doLogin() 메서드 호출
             // login 성공시 return Url로 이동, 실패시 에러메세지
-            this.$store.dispatch("loginStore/doLogin", userInfo).then(() => {
-                const returnUrl = window.location.search.replace(/^\?returnUrl=/, "");
-                console.log(returnUrl)
-                this.$router.push({path: returnUrl, query: {user_id: this.user_id}});
-            }).catch((err) => {
-                this.errorMessage = err.response.data.errormessage;
-            });
+            // this.$store.dispatch("loginStore/doLogin", userInfo).then(() => {
+            //     const returnUrl = window.location.search.replace(/^\?returnUrl=/, "");
+            //     console.log(returnUrl)
+            //     this.$router.push({path: returnUrl, query: {user_id: this.user_id}});
+            // }).catch((err) => {
+            //     this.errorMessage = err.response.data.errormessage;
+            // });
+            this.$router.push({path:'/', query: {user_id : this.user_id}})
         },
         LoginUserRegister(){
             this.$router.push('/register')

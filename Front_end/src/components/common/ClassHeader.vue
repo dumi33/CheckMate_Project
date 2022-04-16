@@ -20,8 +20,11 @@ export default{
     name: 'HeaderName',
     data : function() {
         return {
-            name: this.$store.state.loginStore.user_name
-        };
+            name: ''
+        }
+    },
+    mounted() {
+        this.name = this.$route.query.user_id
     }
 }
 </script>

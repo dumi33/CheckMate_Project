@@ -9,25 +9,24 @@
   </div>
   <div class ="reg_list">
     <p>My 수업 리스트</p>
-    <ul class ="class_list">
-    <li>
       <div class ="list_name">
-        <tr v-for="classItem in classList" v-bind:key="classItem.id">
-          <td id ="class_name">{{classItem.class_name}}</td>
+        <tr v-for="classItem in classList" v-bind:key="classItem.classIdx">
+          <div class = "one_list">
+          <td id ="class_name">{{classItem.className}}</td>
           <div class = "list_btn">
             <button type = "button" @click="ClassManagement(classItem)" id ="reg_btn">관리</button>
             <button type = "button" @click="ClassSelect(classItem)" id="select_btn">선택</button>
+            </div>
         </div>
         </tr>
       </div>
-    </li>
-    </ul>
   </div>
 </div>
 </template>
 
 <script>
   import ClassHeader from './common/ClassHeader.vue'
+  import axios from 'axios'
 
   export default {
     name: 'ClassMain',
@@ -42,18 +41,19 @@
     methods: {
         getClassList() {
           // Http get 메서드로 요청
-            this.axios.get('/' + this.$router.query.user_id, 
-            {params : {
-              user_id : this.$router.query.user_id
-            }}).then((res)=>{
-            console.log(res);
-            this.classList = res.data.data
+          // this.$router.query.user_id,
+            let path = "http://192.168.0.6:8080/classes/";
+            // this.$router.query.user_id
+            axios.get(path + this.$route.query.user_id
+           ).then((res)=>{
+            this.classList = res.data
+            console.log(this.classList)
           }).catch((err) => {
             console.log(err);
           });
         },
         ClassRegister() {
-          this.$router.push('/class/register');
+          this.$router.push({path : '/class/register', query : {user_id: this.$route.query.user_id}});
         },
         ClassManagement(classItem) {
           this.$router.push({path: '/class/setting', query : {classId : classItem.class_id}} )
@@ -81,6 +81,7 @@
     display: inline-block;
     margin: 10px;
     font-size: 30px;
+    font-weight: bold;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
 }
 
@@ -97,7 +98,7 @@
     margin-left: 30px;
     margin-right: 30px;
     margin-top: 10px;
-    width: 60%;
+    width: 70%;
     margin-top: 20px;
 }
 
@@ -106,11 +107,21 @@
     margin: 10px;
     padding: 5px;
     font-size: 25px;
+    font-weight: bold;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
 }
 
 .list_name {
-    text-align: center;
+  text-align: center;
+  display: block;
+
+  width: 100%;
+}
+.list_name tr {
+  text-align: center;
+  display: block;
+  margin: 10px;
+  width: 80%;
 }
 
 .list_btn {
@@ -129,18 +140,14 @@
     border-color: #ffffff7c;
 }
 
-.reg_list li {
-    list-style-type: none;
-    width: 100%;
-}
-
 #class_name {
+  font-weight: bold;
     display: inline-block;
     text-align: center;
     color: #4949e8d0;
     height: 40px;
     font-size: 25px;
-    width: 50%;
+    width: 60%;
     padding-top: 2px;
     margin-left: 0;
     border-bottom: 3px solid;
@@ -148,10 +155,8 @@
     border-color: #4949e8d0;
 }
 #reg_btn {
-    width: 40%;
 }
 #select_btn {
-    width: 40%;
     margin-left:5px;
 }
 </style>

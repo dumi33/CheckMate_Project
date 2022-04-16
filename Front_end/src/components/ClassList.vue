@@ -54,7 +54,7 @@
     methods: {
         getStdList() {
           // Http get 메서드로 요청
-            this.axios.get('/class/list/std' + this.$router.query.classId).then((res)=>{
+            this.axios.get('/class/list/' + this.$router.query.classId, {params: {userid : this.$router.query.classId}}).then((res)=>{
             console.log(res);
             this.className = res.data.className
             this.checkStdList = res.data.CheckStd

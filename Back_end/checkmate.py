@@ -25,13 +25,15 @@ from ai_model import Embedding
 #print(p_dir.exists())
 #from ai_model.Embedding import Create_Embedding
 #from ai_model import Embedding
+from flask_cors import CORS
 
 #from mongodb import Class
-app = Flask(__name__) # 객체 생성 
+app = Flask(__name__) # 객체 생성
+CORS(app, resources={r'*': {'origins': '*'}})
+ 
 
-
-#conn = pymongo.MongoClient('mongodb://user:checkmate12!@3.35.24.5:27017')
-conn = pymongo.MongoClient()
+conn = pymongo.MongoClient('mongodb://user:checkmate12!@3.39.108.76:27017')
+# conn = pymongo.MongoClient()
 mydb = conn.CHECKMATE
 Class =mydb.Class
 Student =mydb.Student
@@ -52,11 +54,6 @@ def oauth_url_api():
     #     % (CLIENT_ID, REDIRECT_URI)
     # )
     return redirect(kakao_oauth_url)
-
-
-@app.route("/class")
-def hello() :
-    return "<h1>HELLO CHECKMATE!</h1>"
 
 # redirect된 주소 
 @app.route("/oauth")
@@ -90,9 +87,9 @@ def oauth_api():
 
 
 
-@app.route("/class/login")
-def helloUser() :
-    return render_template('Create_class.html')
+@app.route("/")
+def hello() :
+    return "<h1>HELLO CHECKMATE!</h1>"
 
 
 
@@ -199,9 +196,9 @@ def GetStduent(classIdx) :
     
 # Class 추가
 @app.route("/classes",methods=['POST']) # 라우팅경로
-def ClassCreate() :
+def CreateClass() :
     if request.method =='POST' :
-        data = request.get_json() # 입력받은 class 정보  
+        data = request.get_json() # 입력받은 class 정보 
         seq = getNextSequenceCLA()
         class_info= {"classIdx" : seq, # 저장할 값 
                 "className": data['className'],
@@ -222,7 +219,7 @@ def ClassCreate() :
     
 # Class 이름변경
 @app.route("/classes/classname/<int:classIdx>",methods=['PATCH']) # 라우팅경로
-def ClassNameChange(classIdx) :
+def PatchClassName(classIdx) :
     if request.method =='PATCH' :
         data = request.get_json() # 이름을 변경할 이름을 입력받음 
         Class.update_one({"classIdx" : classIdx}, 
@@ -261,7 +258,7 @@ def DeleteClass(classIdx) :
 
 # 캡쳐  
 @app.route("/checks",methods=['POST'])
-def PostCapture() :
+def CreateCapture() :
     if request.method =='POST' :
         img = ImageGrab.grab()
         img.save('capture_img.png')
@@ -271,7 +268,7 @@ def PostCapture() :
 
 # 출석확인  
 @app.route("/checks/attendance/<int:classIdx>",methods=['GET'])
-def PostCheck(classIdx) :
+def CreatesCheck(classIdx) :
     if request.method =='GET' :
         capture_addr = 'C:/Users/dumi3/checkmate_project2/CheckMate_Project/capture_img.png'
         data = list(Class.find({"classIdx" : classIdx})) # 해당 클래스정보 
