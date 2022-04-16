@@ -203,14 +203,12 @@ def CreateClass() :
         class_info= {"classIdx" : seq, # 저장할 값 
                 "className": data['className'],
                 "userIdx" : data['userIdx'],
-                "studentIdx" : data['studentIdx'],
                 "status" : 'active'}
         Class.insert_one(
             {
                 "classIdx" : seq,
                 "className": data['className'],
                 "userIdx" : data['userIdx'],
-                "studentIdx" : data['studentIdx'],
                 "status" : 'active'
             }
         ) 
