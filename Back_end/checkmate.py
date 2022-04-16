@@ -202,13 +202,13 @@ def CreateClass() :
         seq = getNextSequenceCLA()
         class_info= {"classIdx" : seq, # 저장할 값 
                 "className": data['className'],
-                "userIdx" : data['userIdx'],
+                "userIdx" : int(data['userIdx']),
                 "status" : 'active'}
         Class.insert_one(
             {
                 "classIdx" : seq,
                 "className": data['className'],
-                "userIdx" : data['userIdx'],
+                "userIdx" : int(data['userIdx']),
                 "status" : 'active'
             }
         ) 
