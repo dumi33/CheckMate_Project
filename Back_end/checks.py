@@ -18,7 +18,7 @@ def CreateCapture() :
         img.save('capture_img.png')
         
         return make_response(jsonify(SUCCESS=True),200)
-# for test
+
     
     
 # 출석확인  
