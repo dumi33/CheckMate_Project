@@ -1,9 +1,11 @@
 <template>
+<div>
   <ClassHeader />
   <div class ="set_class">
-      <input type ="text" name = "class_name" id="set_name" placeholder="수업 이름 변경">
-      <svg @click="SetClassName()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+      <input type ="text" v-model = 'className' ref= "class_name" name = "class_name" id="set_name" placeholder="자료를 입력하세요">
+      <svg @click="SetClassName()" id = "name_btn" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
       </svg>
   </div>
   <div class ="set_student">
@@ -21,68 +23,59 @@
       </div>
   </div>
   <button type = "button" @click="ClassMain()" id="set_btn">수정</button>
+  </div>
 </template>
 
 <script>
   import ClassHeader from './common/ClassHeader.vue'
-
+  import axios from 'axios'
   export default {
     name: 'ClassSetting',
     data : function() {
       return {
-        classItem : {},
-        studentLists : {},
-        image: '',
-        std_name: '',
+        className : '',
+        studentLists : {}
       }
     },
     components: {
       ClassHeader
     }, methods: {
-        GetStudent() {
-          this.axios.get('/class/setting' + this.$route.query.classId).then((res) => {
-            console.log(res);
-            this.classItem = res.data.data;
-            this.studentLists = this.classItem.sutdentLists;
-          }).catch((err) => {
-            console.log(err);
-          });
+        GetStudent() { 
+          this.$refs.class_name.placeholder = this.$route.query.className
+          const path = "http://localhost:8080/students/"
+          this.axios.get(path + this.$route.query.classIdx).then((res) => {
+            this.studentLists = res.data
+            console.log(this.studentLists)
+          })
         },
         SetClassName() {
           var result = confirm("이름을 수정하시겠습니까?");
+          const path = "http://localhost:8080/classes/classname/"
+          console.log(this.className)
           if (result) {
-            let classItem = { className : this.classItem.className};
-            try {
-              let res = this.axios.put("/class/setting" + this.$route.query.classId, classItem);
-              console.log(res.data.success);
-              if (res.data.success == true) {
-                alert("수정되었습니다.");
-              } else {
-                alert("수정되지 않았습니다.");
-              }
-            } catch(err) {
+            axios.patch(path + this.$route.query.classIdx, 
+            {"className" : this.className}).then((res) => {
+              console.log(res);
+              this.className = res.data.data;
+              // this.$route.query.className = this.classItem
+              // this.$refs.class_name.placeholder = this.classItem
+              console.log(this.className)
+              this.$router.push({path: '/class/setting', query : {user_id: this.$route.query.user_id, classIdx: this.$route.query.classIdx, className: this.className}} )
+            }).catch((err) => {
               console.log(err);
-              alert("수정되지 않았습니다.");
-            }
+            });
           }
         },
-        async SetStudent() {
-          let classItem = { className : this.classItem.className, classStudents : this.classItem.classStudents};
-          try {
-            let res = this.axios.put("/class/setting" + this.$route.query.classId, classItem);
-            console.log(res.data.success);
-            if (res.data.success == true) {
-              alert("학생이 추가되었습니다.");
-            } else {
-              alert("학생이 추가되지 않았습니다.");
-            }
-          } catch(err) {
-            console.log(err);
-            alert("학생이 추가되지 않았습니다.");
-          }
+        SetStudent() {
+          const path = 'http://localhost:8080/students/'
+          this.axios.post(path + this.$route.query.classIdx).then((res) => {
+            console.log(res)
+          }).catch((err) => {
+              console.log(err);
+          });
         },
         ClassMain() {
-          this.$router.push('/');
+          this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});
         }
     }, mounted() {
       this.GetStudent();
@@ -177,9 +170,11 @@
 }
 
 #db_list {
-    margin: 10px;
-    margin-left: 60px;
-    font-size: 20px;
+  margin: 5px;
+  margin-left: 60px;
+  font-size: 20px;
+  font-weight: bold;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
 }
 
 </style>
