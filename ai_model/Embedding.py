@@ -8,4 +8,4 @@ def Create_Check(Img_students_addr,Img_capture_addr) :
     app = model_func.model_prepare('models')
     evaluation_embs, evaluation_labels = model_func.embs_result(Img_students_addr, app)
     result = model_func.print_ID_results(evaluation_embs, app,Img_capture_addr,evaluation_labels,verbose=True)
-    return result
+    return result # 출석결과 레이블 반환 

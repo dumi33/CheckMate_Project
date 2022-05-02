@@ -105,6 +105,10 @@ def print_ID_results(evaluation_embs:list, app : FaceAnalysis, img_fpath: str, e
     # generate Insightface embedding
     res = app.get(rgb_arr)   
     
+    
+    print("{} 명의 얼굴이 detect되었습니다.".format(len(res)),end="\n")
+    check_list = [] # 출석한 학생의 레이블 저장할 리스트     
+
     for i in range (len(res)):
         img_emb = res[i].embedding
         img_set.append(res)  
@@ -119,6 +123,8 @@ def print_ID_results(evaluation_embs:list, app : FaceAnalysis, img_fpath: str, e
         no_of_matching_faces = np.sum([1 if d <=0.5 else 0 for d in dists[0]])
         if no_of_matching_faces > 0:
             print(f"Matching face(s) {no_of_matching_faces} found in database! dist : {dists}")
+            check_list.append(pred_labels[0])  # 가장 닮은 인물의 레이블을 저장 
             verbose = True
         else: 
             print(f"No matching face(s) not found in database! dist : {dists}")
+    return check_list

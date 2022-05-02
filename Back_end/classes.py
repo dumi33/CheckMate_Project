@@ -7,6 +7,7 @@ blue_class=Blueprint("class", __name__, url_prefix="/classes")
 conn = pymongo.MongoClient('mongodb://user:checkmate12!@3.39.108.76:27017')
 mydb = conn.CHECKMATE
 Class =mydb.Class
+Attendance =mydb.Attendance
 
 
 #  auto increment # classIdx을 반환
@@ -44,6 +45,12 @@ def CreateClass() :
                 "status" : 'active'
             }
         ) 
+        Attendance.insert_one(
+            {
+                "classIdx" : seq,
+                "status" : 'active'
+            }
+        )
         return make_response(jsonify(SUCCESS=True,data=class_info),200)
     
     
