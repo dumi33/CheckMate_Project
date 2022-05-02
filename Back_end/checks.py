@@ -19,6 +19,16 @@ Student =mydb.Student
 Attendance =mydb.Attendance
 
 
+# # 캡쳐  
+# # for test 
+# @blue_check.route("/hi",methods=['GET'])
+# def fortest() :
+#     if request.method =='GET' :
+#         print(os.getcwd())
+
+#         return make_response(jsonify(SUCCESS=True),200)
+
+
 # 캡쳐  
 # /checks
 @blue_check.route("/",methods=['POST'])
@@ -35,7 +45,7 @@ def CreateCapture() :
 @blue_check.route("/attendance/<int:classIdx>",methods=['POST'])
 def CreatesCheck(classIdx) :
     if request.method =='POST' :
-        capture_addr = 'C:\\Users\\dumi3\\checkcmate_pro2\\CheckMate_Project\\capture_img.png'
+        capture_addr = os.getcwd() +'\capture_img.png'
         data = list(Class.find({"classIdx" : classIdx})) # 해당 클래스정보 
         student_img_addr = data[0]['studentImgAddr'] # 해당 클래스의 학생 이미지 경로
         # 학생들의 임베딩값 추출 & 출석확인
@@ -58,5 +68,5 @@ def CreatesCheck(classIdx) :
                 }
             ) 
         
-        return make_response(jsonify(data=noattendance),200)
+        return make_response(jsonify(출석=students,미출석=noattendance),200)
     
