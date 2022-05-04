@@ -6,6 +6,7 @@ import cv2
 import os
 from typing import List
 from tqdm import tqdm
+import sys 
 
 '''
     모델 불러오는 함수
@@ -122,8 +123,16 @@ def print_ID_results(evaluation_embs:list, app : FaceAnalysis, img_fpath: str, e
         # check if any dist is greater than 0.5, and if so, print the results
         no_of_matching_faces = np.sum([1 if d <=0.5 else 0 for d in dists[0]])
         if no_of_matching_faces > 0:
+            global ans_face_num
             print(f"Matching face(s) {no_of_matching_faces} found in database! dist : {dists}")
-            check_list.append(pred_labels[0])  # 가장 닮은 인물의 레이블을 저장 
+            max_ans = 0 # 해당 레이블이 나온 횟수 
+            ans_face_num = 0 # 레이블 중 다수결로 많은 레이블의 숫자 
+            for i in range(len(pred_labels)) :
+                tmp = pred_labels.count(pred_labels[i])
+                if max_ans < tmp : # 기존의 횟수보다 많으면 
+                    max_ans = tmp # 값을 넣어준다. 
+                    ans_face_num = i # 그 레이블의 번호를 넣어준다
+            check_list.append(pred_labels[ans_face_num])  # 가장 닮은 인물의 레이블을 저장 
             verbose = True
         else: 
             print(f"No matching face(s) not found in database! dist : {dists}")
