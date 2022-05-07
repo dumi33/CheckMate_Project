@@ -48,7 +48,7 @@
           this.isClicked = false;
           console.log(this.class_name)
           const classData = {"className": this.class_name, "userIdx" : this.$route.query.user_id}
-          axios.post('/classes/',classData)
+          axios.post('http://localhost:8080/classes/',classData)
             .then((res) => {
               console.log(res.data)
               this.classIdx = res.data.data.classIdx
@@ -59,7 +59,7 @@
         // 수업 학생 등록
         selectUploadFile() {
           console.log(this.classIdx)
-          axios.post('/students/' + this.classIdx).then((res) => {
+          axios.post('http://localhost:8080/students/' + this.classIdx).then((res) => {
             console.log(res.data)
           })
         },

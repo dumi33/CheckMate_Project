@@ -46,7 +46,7 @@
         getClassList() {
           // Http get 메서드로 요청
           // this.$router.query.user_id,
-            let path = "/classes/";
+            let path = "http://localhost:8080/classes/";
             // this.$router.query.user_id
             axios.get(path + this.$route.query.user_id
            ).then((res)=>{
@@ -70,7 +70,7 @@
         },
         // 수업 삭제
         ClassDelete(classItem) {
-          let path = "/classes/"
+          let path = "http://localhost:8080/classes/"
           axios.patch(path + classItem.classIdx).then((res)=>{
             console.log(res);
             this.$router.go();

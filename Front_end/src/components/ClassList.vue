@@ -55,13 +55,13 @@
     methods: {
         // 화면 전체 캡처
         CaptureImage() {
-            axios.post('/checks/').then((res)=> {
+            axios.post('http://localhost:8080/checks/').then((res)=> {
                 console.log(res)
             })
         },
         // 출석체크
         CheckStd() {
-            axios.post('/checks/attendance/'+ this.$route.query.classIdx).then((res)=> {
+            axios.post('http://localhost:8080/checks/attendance/'+ this.$route.query.classIdx).then((res)=> {
                 console.log(res)
                 this.StdList = res
                 this.checkStdList = res.출석
