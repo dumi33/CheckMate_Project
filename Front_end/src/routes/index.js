@@ -37,15 +37,15 @@ const router = new createRouter({
             name:UserRegister,
             component:UserRegister
         },{
-            path:'/class/register',
+            path:'/classes/register',
             name:ClassRegister,
             component:ClassRegister
         },{
-            path:'/class/setting',
+            path:'/classes/setting',
             name:ClassSetting,
             component:ClassSetting
         },{
-            path:'/class/list',
+            path:'/classes/list',
             name:ClassList,
             component:ClassList
         }

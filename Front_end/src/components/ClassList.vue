@@ -6,7 +6,7 @@
         <h2>{{className}}</h2>
         <div class="class_capture">
             <button @click ="CaptureImage()" type = "button" id="capture_btn">캡처</button>
-            <img id = "cap_img" src = this.img>
+            <!-- <img src=img id="cap_img"> -->
         </div>
         <div class = "btn_a">
         <button type = "button" @click="CheckStd()" id="check_btn">출석확인</button>
@@ -35,13 +35,14 @@
 
 <script>
     import ClassHeader from './common/ClassHeader.vue'
-    import XLSX from 'xlsx';
+    import * as XLSX from 'xlsx'
+    import axios from 'axios'
 
   export default {
     name: 'ClassRegister',
     data: function() {
       return {
-        img : '',
+        // img : require('/Users/namsujin/checkmate_frontend/CheckMate_Project/capture_img.png'),
         StdList : [],
         checkStdList : [],
         uncheckStdList : [],
@@ -52,45 +53,27 @@
       ClassHeader
     },
     methods: {
-        getStdList() {
-          // Http get 메서드로 요청
-            this.axios.get('/class/list/' + this.$router.query.classId, {params: {userid : this.$router.query.classId}}).then((res)=>{
-            console.log(res);
-            this.className = res.data.className
-            this.checkStdList = res.data.CheckStd
-            this.uncheckStdList = res.data.uncheckStd
-          }).catch((err) => {
-            console.log(err);
-            });
-        },
+        // 화면 전체 캡처
         CaptureImage() {
-            // import pyautogui from pyautogui  
-
-            // html2canvas(document.body).then(canvas => {
-            //     document.body.appendChild(canvas);
-            // });
-            // html2canvas(document.body).then(canvas => {
-            //     const link = document.createElement('a')
-            //     link.download = 'filename'
-            //     link.href = canvas.toDataURL()
-            //     document.body.appendChild(link)
-            //     link.click()
-            // });
+            axios.post('/checks/').then((res)=> {
+                console.log(res)
+            })
         },
+        // 출석체크
         CheckStd() {
-            this.axios.post("/class/list",{img: this.img, classId: this.$router.query.classId} ).then((res)=>{
-                console.log(res);
-                this.checkStdList = res.data.CheckStd
-                this.uncheckStdList = res.data.uncheckStd
-            }).catch((err) => {
-                console.log(err);
-            });
+            axios.post('/checks/attendance/'+ this.$route.query.classIdx).then((res)=> {
+                console.log(res)
+                this.StdList = res
+                this.checkStdList = res.출석
+                this.uncheckStdList = res.미출석
+            })
         },
-        async StdCheck(uncheckId) {
+        // 출석체크 업데이트
+        StdCheck(uncheckId) {
             var result = confirm("출석체크하시겠습니까?");
             if (result) {
                 try {
-                    this.axios.put("/class/list/" + uncheckId, uncheckId).then((res) => {
+                    axios.put("/class/list/" + uncheckId, uncheckId).then((res) => {
                         console.log(res.data.success);
                         if (res.data.success == true) {
                             alert("출석체크되었습니다.");
@@ -105,16 +88,18 @@
                 }
             }
         },
+        // 엑셀 파일
         downloadExcel() {
-            var checkData = XLSX.utils.json_to_sheet(this.checkStdList); // this.items 는 json object 를 가지고있어야함 
-            var uncheckData = XLSX.utils.json_to_sheet(this.uncheckStdList);
+            var stdData = XLSX.utils.json_to_sheet(this.StdList);
+            // var checkData = XLSX.utils.json_to_sheet(this.checkStdList); // this.items 는 json object 를 가지고있어야함 
+            // var uncheckData = XLSX.utils.json_to_sheet(this.uncheckStdList);
             var workBook = XLSX.utils.book_new(); // 새 시트 생성 
-            XLSX.utils.book_append_sheet(workBook, checkData, '출석'); // 시트 명명, 데이터 지정
-            XLSX.utils.book_append_sheet(workBook, uncheckData, '결석');
+            XLSX.utils.book_append_sheet(workBook, stdData, '출석'); // 시트 명명, 데이터 지정
+            // XLSX.utils.book_append_sheet(workBook, uncheckData, '결석');
             XLSX.writeFile(workBook, 'check_list.xlsx');
         },
         ClassHome() {
-          this.$router.push('/');
+          this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});
         }
     }
 }
@@ -160,7 +145,7 @@
 }
 
 #capture_btn {
-    display: inline-block;
+    display: block;
     float: right;
     margin:10px;
     background-color: #ffffff;
@@ -181,6 +166,11 @@
     margin-right:auto;
     text-align: center;
     margin-top: 20px;
+}
+
+#cap_img {
+    display: block;
+
 }
 
 

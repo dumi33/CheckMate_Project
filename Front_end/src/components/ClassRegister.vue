@@ -28,7 +28,7 @@
 
 <script>
   import ClassHeader from './common/ClassHeader.vue'
-  
+  import axios from 'axios'
   export default {
     name: 'ClassRegister',
     data: function() {
@@ -43,28 +43,27 @@
     components: {
       ClassHeader
     }, methods: {
+      // 수업 생성 - 이름 등록
         registerClassName() {
-          const path = 'http://localhost:8080/classes'
           this.isClicked = false;
           console.log(this.class_name)
-          this.axios.post(path, 
-          {"className": this.class_name, 
-          "userIdx" : this.$route.query.user_id})
-          .then((res) => {
-            console.log(res.data)
-            this.classIdx = res.data.data.classIdx
-          })
+          const classData = {"className": this.class_name, "userIdx" : this.$route.query.user_id}
+          axios.post('/classes/',classData)
+            .then((res) => {
+              console.log(res.data)
+              this.classIdx = res.data.data.classIdx
+          }).catch((err) => {
+            console.log(err);
+          });
         },
+        // 수업 학생 등록
         selectUploadFile() {
-          const path = 'http://localhost:8080/students/'
-          this.axios.post(path + this.classIdx).then((res) => {
-            console.log(res)
-          })
-          this.axios.get(path + this.classIdx).then((res) => {
-            this.studentList = res.data
-            console.log(this.studentList)
+          console.log(this.classIdx)
+          axios.post('/students/' + this.classIdx).then((res) => {
+            console.log(res.data)
           })
         },
+        // 메인 화면 이동
         ClassRegisterCreate() {
           this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});
         }

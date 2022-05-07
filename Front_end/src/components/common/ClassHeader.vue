@@ -1,7 +1,21 @@
 <template>
     <div class="head">
         <header>
+            <div class ="head_lan">
+            <div class = main-nav-left> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+            <div class = "sub-menu">
+            <tr v-for="classItem in classList" v-bind:key="classItem.classIdx">
+                <div v-if="classItem.status == 'active'" class = "class_list">
+                <td id ="class_name">{{classItem.className}}</td>
+                </div>
+            </tr>
+            </div>
+            </div>
             <h2>Checkmate</h2>
+            </div>
             <ul class="menu">
                 <li><router-link to='/login'>로그아웃</router-link></li>
                 <li id="mypage">{{ name }}</li>
@@ -16,11 +30,28 @@
     </div> 
 </template>
 <script>
+import axios from 'axios'
 export default{
     name: 'HeaderName',
     data : function() {
         return {
-            name: ''
+            name: '',
+            classList: []
+        }
+    },
+    methods: {
+        getClassList() {
+          // Http get 메서드로 요청
+          // this.$router.query.user_id,
+            let path = "/classes/";
+            // this.$router.query.user_id
+            axios.get(path + this.$route.query.user_id
+           ).then((res)=>{
+            this.classList = res.data
+            console.log(this.classList)
+          }).catch((err) => {
+            console.log(err);
+          });
         }
     },
     mounted() {
@@ -36,25 +67,61 @@ export default{
     }
 
     .head{
-        background-color: #4949E8;
+        background-color: rgb(73, 73, 232);
         width: 100%;
         list-style-type: none;
         margin: 0;
         padding: 0;
         display: inline-block;
     }
+    .head .head_lan svg {
+        float: left;
+        display: inline;
+        color: white;
+        margin-left: 15px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
 
+    .sub-menu {
+        position: fixed;
+        width: 200px;
+        height: 100%;
+        transition: 0.5s;
+    }
+
+    .sub-menu{
+        width: 0;
+        height: 100%;
+        overflow: hidden;
+        background-color: rgba(73, 73, 232, 0.8);
+        transition-duration: 0.5s;
+    }
+    .main-nav-left:hover > .sub-menu{
+        height: 100%;
+        width: 300px;
+        overflow: hidden
+    }
     .head h2 {
         color: white;
         text-align: center;
         font-weight: bold;
         float: left;
         display: inline;
-        padding-left: 20px;
         padding: 10px;
+        padding-left: 25px;
+    }
+    .head .h_menu li {
+        float: left;
+        display: inline;
+        color: white;
+        font-weight: bold;
+        padding: 8px;
+        font-size: 15px;
+        padding-top:15px
     }
 
-    .head li {
+    .head .menu li {
         float: right;
         display: inline;
         color: white;

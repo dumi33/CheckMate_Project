@@ -40,20 +40,20 @@
     components: {
       ClassHeader
     }, methods: {
+      //학생 리스트 출력
         GetStudent() { 
           this.$refs.class_name.placeholder = this.$route.query.className
-          const path = "http://localhost:8080/students/"
-          this.axios.get(path + this.$route.query.classIdx).then((res) => {
+          axios.get("/students/"+ this.$route.query.classIdx).then((res) => {
             this.studentLists = res.data
             console.log(this.studentLists)
           })
         },
+        //클래스 이름 수정
         SetClassName() {
           var result = confirm("이름을 수정하시겠습니까?");
-          const path = "http://localhost:8080/classes/classname/"
           console.log(this.className)
           if (result) {
-            axios.patch(path + this.$route.query.classIdx, 
+            axios.patch("/classes/classname/" + this.$route.query.classIdx, 
             {"className" : this.className}).then((res) => {
               console.log(res);
               this.className = res.data.data;
@@ -66,9 +66,9 @@
             });
           }
         },
+        // 학생 등록
         SetStudent() {
-          const path = 'http://localhost:8080/students/'
-          this.axios.post(path + this.$route.query.classIdx).then((res) => {
+          axios.post("/students/"+ this.$route.query.classIdx).then((res) => {
             console.log(res)
           }).catch((err) => {
               console.log(err);

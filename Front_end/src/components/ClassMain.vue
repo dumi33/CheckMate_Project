@@ -42,10 +42,11 @@
       };
     },
     methods: {
+      //수업 리스트 출력
         getClassList() {
           // Http get 메서드로 요청
           // this.$router.query.user_id,
-            let path = "http://localhost:8080/classes/";
+            let path = "/classes/";
             // this.$router.query.user_id
             axios.get(path + this.$route.query.user_id
            ).then((res)=>{
@@ -55,17 +56,21 @@
             console.log(err);
           });
         },
+        // 수업 등록 페이지로 이동
         ClassRegister() {
-          this.$router.push({path : '/class/register', query : {user_id: this.$route.query.user_id}});
+          this.$router.push({path : '/classes/register', query : {user_id: this.$route.query.user_id}});
         },
+        // 수업 관리 페이지로 이동
         ClassManagement(classItem) {
-          this.$router.push({path: '/class/setting', query : {user_id: this.$route.query.user_id, classIdx : classItem.classIdx, className: classItem.className}} )
+          this.$router.push({path: '/classes/setting', query : {user_id: this.$route.query.user_id, classIdx : classItem.classIdx, className: classItem.className}} )
         },
+        // 수업 선택 페이지로 이동
         ClassSelect(classItem) {
-          this.$router.push({path: '/class/list', query : {classId : classItem.classIdx}});
+          this.$router.push({path: '/classes/list', query : {user_id: this.$route.query.user_id, classIdx : classItem.classIdx}});
         },
+        // 수업 삭제
         ClassDelete(classItem) {
-          let path = "http://localhost:8080/classes/"
+          let path = "/classes/"
           axios.patch(path + classItem.classIdx).then((res)=>{
             console.log(res);
             this.$router.go();
