@@ -40,7 +40,7 @@ def CreateCapture() :
         return make_response(jsonify(SUCCESS=True),200)
 
     
-# 출석확인  
+# 출석체크  
 # /checks/attendance/<classIdx>
 @blue_check.route("/attendance/<int:classIdx>",methods=['POST'])
 def CreatesCheck(classIdx) :
@@ -70,3 +70,12 @@ def CreatesCheck(classIdx) :
         
         return make_response(jsonify(출석=students,미출석=noattendance),200)
     
+    
+# 출석 학생 확인   
+# /checks
+@blue_check.route("/attendance/<int:classIdx>",methods=['GET'])
+def GetCheck(classIdx) :
+    if request.method =='GET' :
+        attendanceStudentList=list(Attendance.find({"classIdx" : classIdx},{"_id" : 0, "status":0,'classIdx':0}))
+        
+        return make_response(jsonify(attendanceStudentList),200)
