@@ -41,6 +41,7 @@ def getNextSequenceSTD() :
 @blue_student.route("/<int:classIdx>",methods=['POST']) # 라우팅경로
 def CreateStduent(classIdx) :
     if request.method =='POST' :
+        print("his")
         label = []
         Img_students_addr = AddStduentImg() # 학생들의 사진 폴더를 선택 
         evaluation_labels = os.listdir(Img_students_addr) # 사진들의 이름을 추출 

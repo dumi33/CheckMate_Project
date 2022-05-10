@@ -68,7 +68,7 @@
         },
         // 학생 등록
         SetStudent() {
-          axios.post("/students/"+ this.$route.query.classIdx).then((res) => {
+          axios.post("http://localhost:8080/students/"+ this.$route.query.classIdx).then((res) => {
             console.log(res)
           }).catch((err) => {
               console.log(err);
