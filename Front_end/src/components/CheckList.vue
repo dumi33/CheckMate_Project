@@ -2,14 +2,14 @@
 <div>
   <ClassHeader />
   <div class ="set_class">
-      <h2>{{className}}</h2>
-      <svg @click="ClassMain()" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-house-heart-fill" viewBox="0 0 16 16">
+      <h2 style="cursor:default">{{className}}</h2>
+      <svg style="cursor:pointer" @click="ClassMain()" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-house-heart-fill" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.707L8 2.207l6.646 6.646a.5.5 0 0 0 .708-.707L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
         <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Zm0 5.189c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.691 0-5.018Z"/>
       </svg>
   </div>
   <div class ="get_student">
-    <p>학생 출결 현황</p>
+    <p style="cursor:default">학생 출결 현황</p>
     <table id = "std_list" border ="1" >
       <tr align="center" bgcolor="white">
         <th></th>
@@ -30,7 +30,7 @@
     </table>
   </div>
   <div class ="check_list">
-      <p id = "check_header">결석 학생 리스트</p>
+      <p style="cursor:default" id = "check_header">결석 학생 리스트</p>
     <table id = "check_list" border ="1">
       <tr align="center" bgcolor="white">
         <th>날짜</th>
@@ -79,24 +79,6 @@
                 this.uncheckstds = res.data[0]
                 console.log(this.uncheckstds)
             })
-        },
-        //클래스 이름 수정
-        SetClassName() {
-          var result = confirm("이름을 수정하시겠습니까?");
-          console.log(this.className)
-          if (result) {
-            axios.patch("/classes/classname/" + this.$route.query.classIdx, 
-            {"className" : this.className}).then((res) => {
-              console.log(res);
-              this.className = res.data.data;
-              // this.$route.query.className = this.classItem
-              // this.$refs.class_name.placeholder = this.classItem
-              console.log(this.className)
-              this.$router.push({path: '/class/setting', query : {user_id: this.$route.query.user_id, classIdx: this.$route.query.classIdx, className: this.className}} )
-            }).catch((err) => {
-              console.log(err);
-            });
-          }
         },
         ClassMain() {
           this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});

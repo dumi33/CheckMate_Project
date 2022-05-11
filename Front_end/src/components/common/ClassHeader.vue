@@ -7,24 +7,23 @@
             <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
             </svg>
             <div class = "sub-menu">
-                
                 <div class ="class_menu">
-                <h3>출석부</h3>
+                <h3 style="cursor:default">출석부</h3>
                 <tr v-for="(classItem, classindex) in classList" v-bind:key="classItem.classIdx">
                 <div v-if="classItem.status == 'active'" class = "class_list">
-                <td @click="CheckPage(classItem)" id ="class_name">({{classindex + 1}}) {{classItem.className}}</td>
+                <td style="cursor:pointer" @click="CheckPage(classItem)" id ="class_name">({{classindex + 1}}) {{classItem.className}}</td>
                 </div>
             </tr>
             </div>
             </div>
             </div>
-            <h2>Checkmate</h2>
+            <h2 style="cursor:pointer" @click="ClassMain()">Checkmate</h2>
             </div>
             <ul class="menu">
                 <li><router-link to='/login'>로그아웃</router-link></li>
-                <li id="mypage">{{ name }}</li>
+                <li style="cursor:default" id="mypage">{{ name }}</li>
                 <li id ="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                <svg style="cursor:pointer" @click="UserPage()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                     <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                 </svg>
@@ -60,6 +59,11 @@ export default{
         CheckPage(classItem) {
             this.$router.push({path : '/checks/', query : {user_id: this.$route.query.user_id, classIdx : classItem.classIdx, className: classItem.className}} );
         },
+        ClassMain() {
+          this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});
+        }, UserPage() {
+            this.$router.push({path: '/user', query : {user_id:this.$route.query.user_id}});
+        }
     },
     mounted() {
         this.name = this.$route.query.user_id

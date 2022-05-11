@@ -3,41 +3,41 @@
   <ClassHeader />
   <div class = "class_all">
     <div class ="class_list">
-        <h2>{{className}}</h2>
+        <h2 style="cursor:default">{{className}}</h2>
         <div class="class_capture">
-            <svg @click="PreviousImage()" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+            <svg style="cursor:pointer" @click="PreviousImage()" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
             <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
             </svg>
-            <svg @click="NextImage()" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+            <svg style="cursor:pointer" @click="NextImage()" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
             <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
             </svg>
-            <button @click ="CaptureImage()" type = "button" id="capture_btn">캡처</button>
+            <button style="cursor:pointer" @click ="CaptureImage()" type = "button" id="capture_btn">캡처</button>
             <!-- <img src='https://cdn.boan24.com/news/photo/202009/12440_11770_3815.jpg' id="cap_img"> -->
 
         </div>
         <div class = "btn_a">
-        <button type = "button" @click="CheckStd()" id="check_btn">출석확인</button>
-        <button type = "button" @click="ClassHome()" id="home_btn">홈화면</button>
+        <button style="cursor:pointer" type = "button" @click="CheckStd()" id="check_btn">출석확인</button>
+        <button style="cursor:pointer" type = "button" @click="ClassHome()" id="home_btn">홈화면</button>
         </div>
     </div>
     <div class ="student_list">
         <div class = "check_std">
-            <p>출석 학생 리스트</p>
+            <p style="cursor:default">출석 학생 리스트</p>
             <tr id = "check_db_list" v-for="(checkItem, index) in checkStdList" v-bind:key="index">
                 <td>{{ checkItem }}</td>
             </tr>
         </div>
         <div class = "uncheck_std">
-                <p>결석 학생 리스트</p>
+                <p style="cursor:default">결석 학생 리스트</p>
                 <tr id = "uncheck_db_list" v-for="(uncheckItem, index) in uncheckStdList" v-bind:key="index">
                     <td>{{ uncheckItem }}</td>
                     <button type = "button" @click="StdCheck(uncheckItem.id)" id ="stdcheck_btn">관리</button>
                 </tr>
         </div>
-        <button type = "button" id="excel_btn" @click="downloadExcel()">EXCEL</button>
+        <button style="cursor:pointer" type = "button" id="excel_btn" @click="downloadExcel()">EXCEL</button>
     </div>
   </div>
-</div>
+  </div>
 </template>
 
 <script>

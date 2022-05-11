@@ -1,29 +1,27 @@
 <template>
 <div>
   <ClassHeader />
-  <div style="width:1250px">
   <div class ="reg_class" >
-    <p>수업 등록</p>
-    <svg @click="ClassRegister()" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+    <p style="cursor:default">수업 등록</p>
+    <svg style="cursor:pointer" @click="ClassRegister()" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
       <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
     </svg>
   </div>
   <div class ="reg_list">
-    <p>My 수업 리스트</p>
+    <p style="cursor:default">My 수업 리스트</p>
       <div class ="list_name">
         <tr v-for="classItem in classList" v-bind:key="classItem.classIdx">
           <div v-if="classItem.status == 'active'" class = "class_list">
           <td id ="class_name">{{classItem.className}}</td>
           <div class = "list_btn">
-            <button type = "button" @click="ClassSelect(classItem)" id="select_btn">선택</button>
-            <button type = "button" @click="ClassDelete(classItem)" id="delete_btn">삭제</button>
+            <button style="cursor:pointer" type = "button" @click="ClassSelect(classItem)" id="select_btn">선택</button>
+            <button style="cursor:pointer" type = "button" @click="ClassDelete(classItem)" id="delete_btn">삭제</button>
           </div>
         </div>
         </tr>
       </div>
   </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -110,7 +108,7 @@
     margin-left: 30px;
     margin-right: 50px;
     margin-top: 10px;
-    width: 50%;
+    width: 60%;
     margin-top: 20px;
 }
 
