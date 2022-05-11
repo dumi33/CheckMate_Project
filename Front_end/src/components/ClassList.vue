@@ -6,7 +6,7 @@
         <h2>{{className}}</h2>
         <div class="class_capture">
             <button @click ="CaptureImage()" type = "button" id="capture_btn">캡처</button>
-            <!-- <img src=img id="cap_img"> -->
+            <!-- <img src='https://cdn.boan24.com/news/photo/202009/12440_11770_3815.jpg' id="cap_img"> -->
         </div>
         <div class = "btn_a">
         <button type = "button" @click="CheckStd()" id="check_btn">출석확인</button>
@@ -43,10 +43,11 @@
     data: function() {
       return {
         // img : require('/Users/namsujin/checkmate_frontend/CheckMate_Project/capture_img.png'),
+        img : 'https://cdn.boan24.com/news/photo/202009/12440_11770_3815.jpg',
         StdList : [],
         checkStdList : [],
         uncheckStdList : [],
-        className:''
+        className: this.$route.query.className
       };
     },
     components: {
@@ -62,10 +63,17 @@
         // 출석체크
         CheckStd() {
             axios.post('http://localhost:8080/checks/attendance/'+ this.$route.query.classIdx).then((res)=> {
-                console.log(res)
+                console.log(res.data)
                 this.StdList = res
-                this.checkStdList = res.출석
-                this.uncheckStdList = res.미출석
+                this.checkStdList = res.data
+                this.uncheckStdList = res.data
+            })
+        },
+        CheckList() {
+            axios.get('http://localhost:8080/checks/attendance/'+ this.$route.query.classIdx).then((res)=> {
+                console.log(res)
+                this.uncheckStdList = res.data
+                console.log(this.uncheckStdList)
             })
         },
         // 출석체크 업데이트
@@ -101,6 +109,8 @@
         ClassHome() {
           this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});
         }
+    },mounted() {
+      this.CheckList();
     }
 }
 </script>
@@ -121,14 +131,26 @@
     float:right;
 }
 
+img {
+    text-align: center;
+    font-size: 25px;
+    width: 90%;
+    height: 500px;
+    margin-left : 20px;
+    height: 400px;
+}
+
 .class_list h2 {
+    border: 5px dotted #4949E8  ;
     border-color: #7171e09a;
     color:#4949E8;
     margin-top: 30px;
-    margin-left: 30px;
+    margin-left: 50px;
     margin-bottom: 20px;
-    width: 50%;
-    font-size: 40px;
+    text-align: center;
+    padding-top:4px;
+    width: 40%;
+    font-size: 35px;
 }
 
 .class_capture {

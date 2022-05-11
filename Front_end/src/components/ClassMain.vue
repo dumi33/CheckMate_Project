@@ -15,7 +15,6 @@
           <div v-if="classItem.status == 'active'" class = "class_list">
           <td id ="class_name">{{classItem.className}}</td>
           <div class = "list_btn">
-            <button type = "button" @click="ClassManagement(classItem)" id ="reg_btn">관리</button>
             <button type = "button" @click="ClassSelect(classItem)" id="select_btn">선택</button>
             <button type = "button" @click="ClassDelete(classItem)" id="delete_btn">삭제</button>
           </div>
@@ -60,17 +59,13 @@
         ClassRegister() {
           this.$router.push({path : '/classes/register', query : {user_id: this.$route.query.user_id}});
         },
-        // 수업 관리 페이지로 이동
-        ClassManagement(classItem) {
-          this.$router.push({path: '/classes/setting', query : {user_id: this.$route.query.user_id, classIdx : classItem.classIdx, className: classItem.className}} )
-        },
         // 수업 선택 페이지로 이동
         ClassSelect(classItem) {
-          this.$router.push({path: '/classes/list', query : {user_id: this.$route.query.user_id, classIdx : classItem.classIdx}});
+          this.$router.push({path: '/classes/list', query : {user_id: this.$route.query.user_id, classIdx : classItem.classIdx, className: classItem.className}});
         },
         // 수업 삭제
         ClassDelete(classItem) {
-          let path = "http://localhost:8080/classes/"
+          let path = "http://172.31.40.154:8080/classes/"
           axios.patch(path + classItem.classIdx).then((res)=>{
             console.log(res);
             this.$router.go();
