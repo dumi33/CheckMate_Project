@@ -50,7 +50,7 @@ def CreatesCheck(classIdx) :
         student_img_addr = data[0]['studentImgAddr'] # 해당 클래스의 학생 이미지 경로
         # 학생들의 임베딩값 추출 & 출석확인
         students =Embedding.Create_Check(student_img_addr, capture_addr) # 출석한 학생의 레이블 
-        print("출석한 학생은 {}입니다.".format(students))
+        print("출석한 학생은 {}명입니다.".format(students))
         classStudentList=list(Student.find({"classIdx" : classIdx},{"_id" : 0, "name":1}))
         
         studentList = [] # 학생의 이름만을 추출 

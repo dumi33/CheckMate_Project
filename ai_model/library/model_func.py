@@ -13,7 +13,7 @@ import sys
         인자 : model_path = "모델 파일이 있는 폴더 이름"
 '''
 def model_prepare(model_path):
-    app = FaceAnalysis(name = model_path)
+    app = FaceAnalysis(name = model_path) # 객체 생성 # onnx모델 
     app.prepare(ctx_id=0, det_size=(640, 640))
     return app
 
