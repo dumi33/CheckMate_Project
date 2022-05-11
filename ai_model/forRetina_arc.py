@@ -7,6 +7,12 @@ import os
 from typing import List
 from tqdm import tqdm
 import sys 
+import matplotlib.pyplot as plt
+
+def model_prepare(model_path):
+    app = FaceAnalysis(name = model_path) # 객체 생성 # onnx모델 
+    app.prepare(ctx_id=0, det_size=(640, 640))
+    return app
 
 
 def filter_empty_embs(img_set: List, img_labels: List[str]):
@@ -54,8 +60,8 @@ def embs_result(dir_path : str,  app : FaceAnalysis):
             
             # convert grayscale to rgb
             im = Image.fromarray((img_arr * 255).astype(np.uint8))
-            rgb_arr = np.asarray(im.convert('RGB'))       
-        
+            rgb_arr = np.asarray(im.convert('RGB'))
+
             # generate Insightface embedding
             res = app.get(rgb_arr)          
             # append emb to the eval set
@@ -68,3 +74,55 @@ def embs_result(dir_path : str,  app : FaceAnalysis):
     
     evaluation_embs, evaluation_labels = filter_empty_embs(eval_set, eval_labels)
     return evaluation_embs, evaluation_labels
+
+def print_ID_results(evaluation_embs:list, app : FaceAnalysis, img_fpath: str, evaluation_labels: np.ndarray, verbose: bool = False):      
+    
+    nn = NearestNeighbors(n_neighbors=3, metric="cosine")
+    nn.fit(X=evaluation_embs)
+
+    img_set = list()
+    # read grayscale img
+    img = Image.open(img_fpath) 
+    # plt.imshow(img)
+    # plt.show()
+    img_arr = np.asarray(img)  
+    
+    # convert grayscale to rgb
+    im = Image.fromarray((img_arr * 255).astype(np.uint8))
+    rgb_arr = np.asarray(im.convert('RGB'))       
+
+    # generate Insightface embedding
+    res = app.get(rgb_arr)  
+
+    
+    
+    print("{} 명의 얼굴이 detect되었습니다.".format(len(res)),end="\n")
+    check_list = [] # 출석한 학생의 레이블 저장할 리스트     
+
+    for i in range (len(res)):
+        img_emb = res[i].embedding
+        img_set.append(res)  
+
+        # get pred from KNN
+        dists, inds = nn.kneighbors(X=img_emb.reshape(1,-1), n_neighbors=3, return_distance=True)
+
+        # get labels of the neighbours
+        pred_labels = [evaluation_labels[i] for i in inds[0]]
+
+        # check if any dist is greater than 0.5, and if so, print the results
+        no_of_matching_faces = np.sum([1 if d <=0.5 else 0 for d in dists[0]])
+        if no_of_matching_faces > 0:
+            global ans_face_num
+            print(f"Matching face(s) {no_of_matching_faces} found in database! dist : {dists}")
+            max_ans = 0 # 해당 레이블이 나온 횟수 
+            ans_face_num = 0 # 레이블 중 다수결로 많은 레이블의 숫자 
+            for i in range(len(pred_labels)) :
+                tmp = pred_labels.count(pred_labels[i])
+                if max_ans < tmp : # 기존의 횟수보다 많으면 
+                    max_ans = tmp # 값을 넣어준다. 
+                    ans_face_num = i # 그 레이블의 번호를 넣어준다
+            check_list.append(pred_labels[ans_face_num])  # 가장 닮은 인물의 레이블을 저장 
+            verbose = True
+        else: 
+            print(f"No matching face(s) not found in database! dist : {dists}")
+    return check_list
