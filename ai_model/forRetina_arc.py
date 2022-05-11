@@ -1,27 +1,20 @@
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
 from PIL import Image
-from .face_analysis import *
+from library.face_analysis import *
 import cv2
 import os
 from typing import List
 from tqdm import tqdm
 import sys 
+import matplotlib.pyplot as plt
 
-'''
-    모델 불러오는 함수
-        인자 : model_path = "모델 파일이 있는 폴더 이름"
-'''
 def model_prepare(model_path):
     app = FaceAnalysis(name = model_path) # 객체 생성 # onnx모델 
     app.prepare(ctx_id=0, det_size=(640, 640))
     return app
 
-'''
-    임베딩값 처리
-    - 비어있는 값 제외
-    - 임베딩 값만 추출
-'''
+
 def filter_empty_embs(img_set: List, img_labels: List[str]):
     # filtering where insightface could not generate an embedding
     good_idx = [i for i,x in enumerate(img_set) if x]
@@ -40,11 +33,8 @@ def filter_empty_embs(img_set: List, img_labels: List[str]):
     
     return clean_embs, clean_labels
 
-'''
-    임베딩 생성 함수
-        인자: dir_path = "이미지 폴더 경로"
-            app = "FaceAnalysis 객체"
-'''
+
+# 저장된 학생 사진의 임베딩값과 레이블 추출 
 def embs_result(dir_path : str,  app : FaceAnalysis):
     files = os.listdir(dir_path)[0:] # 이미지 파일 리스트
     files.sort()
@@ -70,8 +60,8 @@ def embs_result(dir_path : str,  app : FaceAnalysis):
             
             # convert grayscale to rgb
             im = Image.fromarray((img_arr * 255).astype(np.uint8))
-            rgb_arr = np.asarray(im.convert('RGB'))       
-        
+            rgb_arr = np.asarray(im.convert('RGB'))
+
             # generate Insightface embedding
             res = app.get(rgb_arr)          
             # append emb to the eval set
@@ -85,10 +75,6 @@ def embs_result(dir_path : str,  app : FaceAnalysis):
     evaluation_embs, evaluation_labels = filter_empty_embs(eval_set, eval_labels)
     return evaluation_embs, evaluation_labels
 
-'''
-    비교 함수
-        : img_fpath 이미지에 대해 evaluation_embs에 저장된 값들에 있는 지 비교
-'''
 def print_ID_results(evaluation_embs:list, app : FaceAnalysis, img_fpath: str, evaluation_labels: np.ndarray, verbose: bool = False):      
     
     nn = NearestNeighbors(n_neighbors=3, metric="cosine")
@@ -97,6 +83,8 @@ def print_ID_results(evaluation_embs:list, app : FaceAnalysis, img_fpath: str, e
     img_set = list()
     # read grayscale img
     img = Image.open(img_fpath) 
+    # plt.imshow(img)
+    # plt.show()
     img_arr = np.asarray(img)  
     
     # convert grayscale to rgb
@@ -104,7 +92,8 @@ def print_ID_results(evaluation_embs:list, app : FaceAnalysis, img_fpath: str, e
     rgb_arr = np.asarray(im.convert('RGB'))       
 
     # generate Insightface embedding
-    res = app.get(rgb_arr)   
+    res = app.get(rgb_arr)  
+
     
     
     print("{} 명의 얼굴이 detect되었습니다.".format(len(res)),end="\n")
