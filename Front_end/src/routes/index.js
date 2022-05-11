@@ -4,7 +4,7 @@ import ClassMain from '../components/ClassMain.vue'
 import UserLogin from '../components/UserLogin.vue'
 import UserRegister from '../components/UserRegister.vue'
 import ClassRegister from '../components/ClassRegister.vue'
-import ClassSetting from '../components/ClassSetting.vue'
+import CheckList from '../components/CheckList.vue'
 import ClassList from '../components/ClassList.vue'
 // import store from '../store';
 
@@ -41,9 +41,9 @@ const router = new createRouter({
             name:ClassRegister,
             component:ClassRegister
         },{
-            path:'/classes/setting',
-            name:ClassSetting,
-            component:ClassSetting
+            path:'/checks',
+            name:CheckList,
+            component:CheckList
         },{
             path:'/classes/list',
             name:ClassList,

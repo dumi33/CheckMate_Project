@@ -7,11 +7,15 @@
             <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
             </svg>
             <div class = "sub-menu">
-            <tr v-for="classItem in classList" v-bind:key="classItem.classIdx">
+                
+                <div class ="class_menu">
+                <h3>출석부</h3>
+                <tr v-for="(classItem, classindex) in classList" v-bind:key="classItem.classIdx">
                 <div v-if="classItem.status == 'active'" class = "class_list">
-                <td id ="class_name">{{classItem.className}}</td>
+                <td @click="CheckPage(classItem)" id ="class_name">({{classindex + 1}}) {{classItem.className}}</td>
                 </div>
             </tr>
+            </div>
             </div>
             </div>
             <h2>Checkmate</h2>
@@ -32,7 +36,7 @@
 <script>
 import axios from 'axios'
 export default{
-    name: 'HeaderName',
+    name: 'ClassHeader',
     data : function() {
         return {
             name: '',
@@ -43,7 +47,7 @@ export default{
         getClassList() {
           // Http get 메서드로 요청
           // this.$router.query.user_id,
-            let path = "/classes/";
+            let path = "http://localhost:8080/classes/";
             // this.$router.query.user_id
             axios.get(path + this.$route.query.user_id
            ).then((res)=>{
@@ -52,10 +56,14 @@ export default{
           }).catch((err) => {
             console.log(err);
           });
-        }
+        },
+        CheckPage(classItem) {
+            this.$router.push({path : '/checks/', query : {user_id: this.$route.query.user_id, classIdx : classItem.classIdx, className: classItem.className}} );
+        },
     },
     mounted() {
         this.name = this.$route.query.user_id
+        this.getClassList()
     }
 }
 </script>
@@ -81,6 +89,22 @@ export default{
         margin-left: 15px;
         margin-top: 10px;
         font-weight: bold;
+    }
+    .class_menu h3 {
+        display: block;
+        margin-left: 20px;
+    }
+
+    .class_menu {
+        color: white;
+        margin: 40px;
+        margin-top: 50px;
+        line-height: 50px;
+        border: 1px solid;
+    }
+    .class_list {
+        margin-left: 30px;
+        width: 100%;
     }
 
     .sub-menu {
