@@ -2,7 +2,7 @@
 <body>
     <div class = "login_all">
     <div class = "login_block">
-        <h2>CheckMate</h2>
+        <h2 style="cursor:default">CheckMate</h2>
         <div class = "login_id">
             <input type ="text" ref = "login_id" name = "login_id" id="login_id" v-model = "user_id" placeholder="ID">
         </div>
@@ -10,8 +10,9 @@
             <input type ="text" ref = "login_pw" name = "login_pw" id="login_pw" v-model = "user_pw" placeholder="Password">
         </div>
         <div class="login_submit">
-            <button type = "button" @click="LoginCreate()" id="login_btn" value="로그인">로그인</button>
-            <button type = "button" @click="LoginUserRegister()" id="register_btn" value="회원가입">회원가입</button>
+            <button style="cursor:pointer" type = "button" @click="LoginCreate()" id="login_btn" value="로그인">로그인</button>
+            <button style="cursor:pointer" type = "button" @click="LoginUserRegister()" id="register_btn" value="회원가입">회원가입</button>
+            <img style="cursor:pointer" src="../assets/kakao_img.png" id="kakao_image">
         </div>
     </div>
     </div>
@@ -132,6 +133,25 @@ body {
     border-right: none;
     padding:10px;
     font-size: 15px;
+    box-shadow: 3px 3px 3px #4949e87c;
+}
+
+button:active {
+    box-shadow:none;
+}
+
+#kakao_image {
+    margin-top: 20px;
+    text-align: center;
+    margin-left: 5px;
+    width:250px;
+    height: 40px;
+    box-shadow: 3px 3px 3px #eed601;
+    border-radius: 5px;
+}
+
+#kakao_image:active {
+    box-shadow:none;
 }
 
 </style>

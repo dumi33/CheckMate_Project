@@ -2,7 +2,7 @@
     <body>
         <div class ="register_all">
         <div class = "register">
-            <h2>CheckMate</h2>
+            <h2 style="cursor:default">CheckMate</h2>
             <div class = "reg_name">
                 <input ref = "reg_name" v-model="reg_name" type ="text" name = "reg_name" id="reg_name" placeholder="Name">
             </div>
@@ -16,7 +16,7 @@
                 <input ref = "reg_pw" v-model="reg_pw" type ="text" name = "reg_pw" id="reg_pw" placeholder="Password">
             </div>
             <div id="reg_submit">
-                <button type = "button" @click="UserRegister()" id="register_btn">등록</button>
+                <button style="cursor:pointer" type = "button" @click="UserRegister()" id="register_btn">등록</button>
             </div>
         </div>
         </div>
@@ -155,5 +155,11 @@ body {
     border-right: none;
     padding:10px;
     font-size: 15px;
+    box-shadow: 3px 3px 3px #4949e87c;
 }
+
+button:active {
+    box-shadow:none;
+}
+
 </style>
