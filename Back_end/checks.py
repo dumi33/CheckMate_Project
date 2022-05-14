@@ -1,8 +1,11 @@
 from flask import Blueprint, make_response, render_template, request, jsonify, redirect
 import pymongo
-from PIL import ImageGrab
+from PIL import ImageGrab, Image
 import datetime as dt
-
+from s3_img import *
+from s3_img import s3_connection
+from config import AWS_S3_BUCKET_NAME
+from tkinter import filedialog
 
 import os # aim_model이 같은 디렉토리에 있어서 path를 앞에 붙임 
 import sys
@@ -19,14 +22,23 @@ Student =mydb.Student
 Attendance =mydb.Attendance
 
 
-# # 캡쳐  
-# # for test 
-# @blue_check.route("/hi",methods=['GET'])
-# def fortest() :
-#     if request.method =='GET' :
-#         print(os.getcwd())
+s3 = s3_connection()
+s4 = s4_connection() # read_image_from_s4 이용을 위해 
+# 캡쳐  
+# for test 
+@blue_check.route("/hi",methods=['GET'])
+def fortest() :
+    if request.method =='GET' :
+        #img=read_image_from_s3(s3,'fortest.jpg')
+        # file_name = os.getcwd() +'\capture_img.png' 
+        # img = Image.open(file_name)
+        # img.show()
+        handle_upload_img(s3,'irene')
 
-#         return make_response(jsonify(SUCCESS=True),200)
+        
+        return make_response(jsonify(SUCCESS=True),200)
+
+        
 
 
 # 캡쳐  
@@ -34,10 +46,22 @@ Attendance =mydb.Attendance
 @blue_check.route("/",methods=['POST'])
 def CreateCapture() :
     if request.method =='POST' :
-        img = ImageGrab.grab()
-        img.save('capture_img.png')
         
+        img = ImageGrab.grab()
+        img.save('capture_img.jpg')
+        file_name = os.getcwd() +'\capture_img.jpg'
+        s3.upload_file(s3,'capture_img')
+        # if os.path.isfile(file_name):
+        #     os.remove(file_name) 
         return make_response(jsonify(SUCCESS=True),200)
+    
+# 캡쳐 이미지 주소 반환 
+# /checks/img
+@blue_check.route("/img",methods=['GET'])
+def GetCapture() :
+    if request.method =='GET' :
+        url=s3_get_image_url(s3,'capture_img')
+        return make_response(jsonify(img_url=url),200)
 
     
 # 출석체크  
@@ -79,3 +103,5 @@ def GetCheck(classIdx) :
         attendanceStudentList=list(Attendance.find({"classIdx" : classIdx},{"_id" : 0, "status":0,'classIdx':0}))
         
         return make_response(jsonify(attendanceStudentList),200)
+    
+    

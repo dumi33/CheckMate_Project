@@ -3,3 +3,7 @@ REDIRECT_URI =  "http://localhost:8080/oauth"
 CLIENT_SECRET = "45nxtwJniTCuGvGuAmfNbikS4ogkewfv"
 
 
+AWS_ACCESS_KEY = "AKIA44TYUEHHDFBJQOM6"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_S3_BUCKET_REGION = "ap-northeast-2"
+AWS_S3_BUCKET_NAME = "checkmateclass"
