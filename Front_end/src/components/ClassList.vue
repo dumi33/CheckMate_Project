@@ -122,7 +122,7 @@
             XLSX.writeFile(workBook, 'check_list.xlsx');
         },
         ClassHome() {
-          this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});
+          this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
         }
     }
 }

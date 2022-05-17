@@ -15,13 +15,27 @@ const router = new createRouter({
     routes:[
         {
             path:'/',
+            // name:ClassExcuse,
+            // component:ClassExcuse,
+            beforeEnter: (to, from, next) => {
+                const isLogin = to.query.success
+                console.log(isLogin)
+                if(!isLogin) {
+                    next('/login?returnUrl='+to.fullPath);
+                }else {
+                    next();
+                } 
+            }
+        },
+        {
+            path:'/classes',
             name:ClassMain,
             component:ClassMain,
             // 로그인 여부 확인 
             // beforeEnter: (to, from, next) => {
-            //     const isLogin = store.getters['loginStore/isLogin'];
-            //     //로그인이 되지 않은 경우, /login으로 이동
-            //     // 로그인시에 /로 이동
+            //     // const isLogin = store.getters['loginStore/isLogin'];
+            //     // //로그인이 되지 않은 경우, /login으로 이동
+            //     // // 로그인시에 /로 이동
             //     if(!isLogin) {
             //         next('/login?returnUrl='+to.fullPath);
             //     }else {
