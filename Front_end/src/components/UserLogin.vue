@@ -51,7 +51,8 @@ export default {
             // }).catch((err) => {
             //     this.errorMessage = err.response.data.errormessage;
             // });
-            this.$router.push({path:'/', query: {user_id : this.user_id}})
+            this.success = true
+            this.$router.push({path:'/classes', query: {user_id : this.user_id}})
         },
         LoginUserRegister(){
             this.$router.push('/register')

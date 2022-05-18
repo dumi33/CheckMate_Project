@@ -63,7 +63,7 @@
         },
         // 메인 화면 이동
         ClassRegisterCreate() {
-          this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});
+          this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
         }
     }
   }

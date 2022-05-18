@@ -81,7 +81,7 @@
             })
         },
         ClassMain() {
-          this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});
+          this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
         }
     }, mounted() {
       this.GetStudent();

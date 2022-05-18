@@ -4,21 +4,22 @@
     <div class = "profile">
     <h2>마이페이지</h2>
         <div id = "icon">
-            <h3>프로필 사진</h3>
+            <h3>프로필</h3>
             <hr>
             <svg style="cursor:default" xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                 <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
             </svg>
-            <button style="cursor:pointer" type = "button" @click="UpdateUserInfo()" id="photo_btn">수정</button>
+            <h3 id = 'name'>{{name}}</h3>
         </div>
         <div id ="info">
             <h3>이메일 변경</h3>
             <input v-model="email" type="text" id="email" name="email">
+            <button style="cursor:pointer" type = "button" @click="UpdateUserEmail()" class="update_btn">수정</button>
             <hr>
             <h3>비밀번호 변경</h3>
             <input v-model="passwd" type="text" id="passwd" name="passwd">
-            <button style="cursor:pointer" type = "button" @click="UpdateUserInfo()" id="update_btn">수정</button>
+            <button style="cursor:pointer" type = "button" @click="UpdateUserPasswd()" class="update_btn">수정</button>
         </div>
     </div>
   </div>
@@ -47,8 +48,7 @@
                     this.passwd = res.data.passwd
                 })
             },
-            UpdateUserInfo() {
-                var pwdCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+            UpdateUserEmail(){
                 var emailCheck= /^[A-Za-z0-9_]+[A-Za-z0-9]*[@]{1}[A-Za-z0-9]+[A-Za-z0-9]*[.]{1}[A-Za-z]{1,3}$/;
                 // 유효성 체크
                 if (!emailCheck.test(this.email)) {
@@ -56,16 +56,26 @@
                     this.$refs.reg_email.focus();
                     return;
                 }
-                else if (!pwdCheck.test(this.passwd)) {
+                var result = confirm('값을 변경하시겠습니까?')
+                if(result) {
+                    axios.patch('http://localhost:8080/user/email'+ this.$route.query.user_id, 
+                        {   email : this.email}).then((res)=> {
+                        console.log(res.data)
+                    })
+                }
+            },
+            UpdateUserPasswd() {
+                var pwdCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+
+                if (!pwdCheck.test(this.passwd)) {
                     alert("비밀번호는 영문자+숫자+특수문자 조합으로 8~25자리 사용해야 합니다.");
                     this.$refs.reg_pw.focus();
                     return;
                 }
                 var result = confirm('값을 변경하시겠습니까?')
                 if(result) {
-                    axios.patch('http://localhost:8080/user/'+ this.$route.query.user_id, 
-                        {   email : this.email, 
-                            passwd : this.passwd}).then((res)=> {
+                    axios.patch('http://localhost:8080/user/passwd'+ this.$route.query.user_id, 
+                        { passwd : this.passwd}).then((res)=> {
                         console.log(res.data)
                     })
                 }
@@ -115,6 +125,12 @@
     color:#4949E8;
 }
 
+.profile #name{
+    margin: 0px;
+    margin-top: 10px;
+    text-align: center;
+}
+
 #icon svg{
     display: inline-block;
     text-align: center;
@@ -157,24 +173,23 @@
 #info input {
     margin-left: 40px;
     font-size: 15px;
-    display: block;
+    display: inline-block;
     height:30px;
     width: 200px;
+    margin-top: 10px;
+    margin-bottom:10px;
     color: rgba(73, 73, 232, 0.8);
 }
 
-#update_btn {
-    display: block;
+.update_btn {
+    display: inline-block;
     text-align: center;
-    margin-top: 20px;
+    margin-left: 20px;
     background:linear-gradient(to bottom, #4949e87c,#4949e8d0);
     color: white;
     height: 30px;
     border-radius: 5px;
     font-size: 20px;
-    position : absolute;
-    left: 40%;
-    bottom : 10px;
     border-color: #ffffff7c;
 }
 
