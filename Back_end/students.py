@@ -48,13 +48,14 @@ def CreateStduent(classIdx) :
         for evaluation_label in evaluation_labels :  # 확장자 제거 
             label.append(evaluation_label.rsplit('_')[0])
         studentList = []
-        
+        studentIdxlist = []
         for i in range(len(label)) :
             seq = getNextSequenceSTD()
             student= {"studentIdx" : seq,
                     "name": label[i],
                     "classIdx" : classIdx,
                     "status" : 'active'}
+            
             Student.insert_one({
                     "studentIdx" : seq,
                     "name": label[i],
@@ -62,13 +63,22 @@ def CreateStduent(classIdx) :
                     "status" : 'active'}) 
             
             studentList.append(student)
+            studentIdxlist.append(seq)
+        #  학생들을 입력받을 때 
         
-        #  학생들을 입력받을 때 class에 학생들의 사진경로를 추가
+        # class에 학생들의 사진경로를 추가
         Class.update_one({"classIdx" : classIdx}, 
                 {   "$set" :
-                    {"studentImgAddr" : Img_students_addr}
+                     {"studentImgAddr" : Img_students_addr}
                 }
             ) 
+         # class에 학생들의 idx 추가 
+        Class.update_one({"classIdx" : classIdx}, 
+                {   "$set" :
+                     {"studentList" : studentIdxlist }
+                }
+            )
+        
         return make_response(jsonify(SUCCESS=True,data=studentList),200)
     
     

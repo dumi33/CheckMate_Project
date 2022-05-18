@@ -34,7 +34,6 @@ def filter_empty_embs(img_set: List, img_labels: List[str]):
     return clean_embs, clean_labels
 
 
-# 저장된 학생 사진의 임베딩값과 레이블 추출 
 def embs_result(dir_path : str,  app : FaceAnalysis):
     files = os.listdir(dir_path)[0:] # 이미지 파일 리스트
     files.sort()
@@ -60,8 +59,8 @@ def embs_result(dir_path : str,  app : FaceAnalysis):
             
             # convert grayscale to rgb
             im = Image.fromarray((img_arr * 255).astype(np.uint8))
-            rgb_arr = np.asarray(im.convert('RGB'))
-
+            rgb_arr = np.asarray(im.convert('RGB'))       
+        
             # generate Insightface embedding
             res = app.get(rgb_arr)          
             # append emb to the eval set
@@ -74,6 +73,7 @@ def embs_result(dir_path : str,  app : FaceAnalysis):
     
     evaluation_embs, evaluation_labels = filter_empty_embs(eval_set, eval_labels)
     return evaluation_embs, evaluation_labels
+    
 
 def print_ID_results(evaluation_embs:list, app : FaceAnalysis, img_fpath: str, evaluation_labels: np.ndarray, verbose: bool = False):      
     

@@ -8,6 +8,7 @@ conn = pymongo.MongoClient('mongodb://user:checkmate12!@3.39.108.76:27017')
 mydb = conn.CHECKMATE
 Class =mydb.Class
 Attendance =mydb.Attendance
+CaptureImg =mydb.CaptureImg
 
 
 #  auto increment # classIdx을 반환
@@ -46,6 +47,12 @@ def CreateClass() :
             }
         ) 
         Attendance.insert_one(
+            {
+                "classIdx" : seq,
+                "status" : 'active'
+            }
+        )
+        CaptureImg.insert_one(
             {
                 "classIdx" : seq,
                 "status" : 'active'
