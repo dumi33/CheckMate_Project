@@ -60,7 +60,7 @@ export default{
             this.$router.push({path : '/checks/', query : {user_id: this.$route.query.user_id, classIdx : classItem.classIdx, className: classItem.className}} );
         },
         ClassMain() {
-          this.$router.push({path: '/', query : {user_id:this.$route.query.user_id}});
+          this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
         }, UserPage() {
             this.$router.push({path: '/user', query : {user_id:this.$route.query.user_id}});
         }

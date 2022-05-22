@@ -10,6 +10,7 @@
   </div>
   <div class ="get_student">
     <p style="cursor:default">학생 출결 현황</p>
+    <button style="cursor:pointer" type = "button" id="excel_btn" @click="DownloadCheckExcel()">EXCEL</button>
     <table id = "std_list" border ="1" >
       <tr align="center" bgcolor="white">
         <th></th>
@@ -31,6 +32,7 @@
   </div>
   <div class ="check_list">
       <p style="cursor:default" id = "check_header">결석 학생 리스트</p>
+      <button style="cursor:pointer" type = "button" id="excel_btn" @click="DownloadUncheckExcel()">EXCEL</button>
     <table id = "check_list" border ="1">
       <tr align="center" bgcolor="white">
         <th>날짜</th>
@@ -52,6 +54,7 @@
 <script>
   import ClassHeader from './common/ClassHeader.vue'
   import axios from 'axios'
+  import * as XLSX from 'xlsx'
   export default {
     name: 'CheckList',
     data : function() {
@@ -82,7 +85,23 @@
         },
         ClassMain() {
           this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
-        }
+        },DownloadCheckExcel() {
+            var stdData = XLSX.utils.table_to_sheet(document.getElementById('std_list'));
+            // var checkData = XLSX.utils.json_to_sheet(this.checkStdList); // this.items 는 json object 를 가지고있어야함 
+            // var uncheckData = XLSX.utils.json_to_sheet(this.uncheckStdList);
+            var workBook = XLSX.utils.book_new(); // 새 시트 생성 
+            XLSX.utils.book_append_sheet(workBook, stdData, '학생출결현황'); // 시트 명명, 데이터 지정
+            // XLSX.utils.book_append_sheet(workBook, uncheckData, '결석');
+            XLSX.writeFile(workBook, '학생_출결_현황.xlsx');
+        }, DownloadUncheckExcel() {
+            var stdData = XLSX.utils.table_to_sheet(document.getElementById('check_list'));
+            // var checkData = XLSX.utils.json_to_sheet(this.checkStdList); // this.items 는 json object 를 가지고있어야함 
+            // var uncheckData = XLSX.utils.json_to_sheet(this.uncheckStdList);
+            var workBook = XLSX.utils.book_new(); // 새 시트 생성 
+            XLSX.utils.book_append_sheet(workBook, stdData, '결석학생리스트'); // 시트 명명, 데이터 지정
+            // XLSX.utils.book_append_sheet(workBook, uncheckData, '결석');
+            XLSX.writeFile(workBook, '결석_학생_리스트.xlsx');
+        }, 
     }, mounted() {
       this.GetStudent();
       this.GetCheckList();
@@ -188,6 +207,18 @@
   margin-left: 30px;
   margin-right: 30px;
   margin-bottom: 10px;
+}
+
+#excel_btn {
+    background:linear-gradient(to bottom, #4949e87c,#2d2de4d0);
+    color: white;
+    height: 25px;
+    border-radius: 5px;
+    font-size: 15px;
+    border-color: #ffffff7c;
+    margin-right: auto;
+    margin-left: 20px;
+    text-align: center;
 }
 
 </style>

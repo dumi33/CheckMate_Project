@@ -33,7 +33,6 @@
                     <button type = "button" @click="StdCheck(uncheckItem.id)" id ="stdcheck_btn">관리</button>
                 </tr>
         </div>
-        <button style="cursor:pointer" type = "button" id="excel_btn" @click="downloadExcel()">EXCEL</button>
     </div>
   </div>
   </div>
@@ -41,7 +40,6 @@
 
 <script>
     import ClassHeader from './common/ClassHeader.vue'
-    import * as XLSX from 'xlsx'
     import axios from 'axios'
 
   export default {
@@ -84,12 +82,14 @@
             })
         },
         NextImage() {
+            console.log('next')
             if(this.now_img < this.img.length){
                 this.now_img = this.now_img + 1
             } else {
                 this.now_img = 0
             }
         },PreviousImage() {
+            console.log('previous')
             if(this.now_img > this.img.length) {
                 this.now_img = this.now_img - 1
             } else {
@@ -116,19 +116,16 @@
                 }
             }
         },
-        // 엑셀 파일
-        downloadExcel() {
-            var stdData = XLSX.utils.json_to_sheet(this.StdList);
-            // var checkData = XLSX.utils.json_to_sheet(this.checkStdList); // this.items 는 json object 를 가지고있어야함 
-            // var uncheckData = XLSX.utils.json_to_sheet(this.uncheckStdList);
-            var workBook = XLSX.utils.book_new(); // 새 시트 생성 
-            XLSX.utils.book_append_sheet(workBook, stdData, '출석'); // 시트 명명, 데이터 지정
-            // XLSX.utils.book_append_sheet(workBook, uncheckData, '결석');
-            XLSX.writeFile(workBook, 'check_list.xlsx');
-        },
         ClassHome() {
           this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
         }
+    }, mounted() {
+        window.addEventListener('keydown', (e) => {
+            if(e.keyCode === 37)
+                this.PreviousImage()
+            else if (e.keyCode === 39)
+                this.NextImage()
+        })
     }
 }
 </script>
@@ -263,21 +260,6 @@ img {
     margin-left:10px;
     margin-right:20px;
     margin-bottom:20px;
-}
-
-#excel_btn {
-    display: block;
-    background:linear-gradient(to bottom, #4949e87c,#4949e8d0);
-    color: white;
-    height: 50px;
-    width: 50%;
-    border-radius: 5px;
-    font-size: 25px;
-    border-color: #ffffff7c;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: 20px;
-    text-align: center;
 }
 
 .check_std p {
