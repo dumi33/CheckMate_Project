@@ -61,13 +61,13 @@
     methods: {
         // 화면 전체 캡처
         CaptureImage() {
-            axios.post('http://localhost:8080/checks/').then((res)=> {
+            axios.post('http://localhost:8080/checks/'+ this.$route.query.classIdx).then((res)=> {
                 console.log(res)
             })
             this.GetCaptureImage()
         },
         GetCaptureImage(){
-            axios.get('http://localhost:8080/checks/img/').then((res)=>{
+            axios.get('http://localhost:8080/checks/img/' +  this.$route.query.classIdx).then((res)=>{
                 console.log(res.data.img_url)
                 this.img = res.data.img_url
             })
