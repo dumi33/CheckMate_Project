@@ -218,7 +218,7 @@ class SCRFD:
         det_img[:new_height, :new_width, :] = resized_img
 
         scores_list, bboxes_list, kpss_list = self.forward(det_img, threshold)
-
+        
         scores = np.vstack(scores_list)
         scores_ravel = scores.ravel()
         order = scores_ravel.argsort()[::-1]

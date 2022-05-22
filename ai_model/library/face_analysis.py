@@ -72,75 +72,43 @@ class FaceAnalysis:
             else:
                 model.prepare(ctx_id)
 
-    # 모델 적용
+     # 모델 적용
     def get(self, img, max_num=0):
         # 모델 bbox, kpss
         # face detection
-        #bboxes, kpss = self.det_model.detect(img,
-        #                                     threshold=self.det_thresh,
-        #                                     max_num=max_num,
-        #                                     metric='default')
-        img_path = os.getcwd() +'\capture_img.png'
-        faces = RetinaFace.detect_faces(img_path)
-        
-        # detect된 얼굴의 bbox 
-        bboxlist = []
-        for i in range(1,len(faces)+1) : 
-            bboxlist.append(faces['face_{}'.format(i)]['facial_area']) # 각 얼굴별 랜드마크, bbox를 출력
-        
-        # detecct된 얼굴의 kps 
-        kpslist = []
-        for i in range(1,len(faces)+1) : 
-            tmp = []
-            tmp.append(faces['face_{}'.format(i)]['landmarks']['right_eye']) # 각 얼굴별 랜드마크, bbox를 출력
-            tmp.append(faces['face_{}'.format(i)]['landmarks']['left_eye']) 
-            tmp.append(faces['face_{}'.format(i)]['landmarks']['nose'])
-            tmp.append(faces['face_{}'.format(i)]['landmarks']['mouth_right'])
-            tmp.append(faces['face_{}'.format(i)]['landmarks']['mouth_left'])
-            kpslist.append(tmp)
-        kpslist = np.array(kpslist)
-            
-        scorelist = []
-        for i in range(1,len(faces)+1) : 
-            scorelist.append(faces['face_{}'.format(i)]['score']) # 각 얼굴별 랜드마크, bbox를 출력
-        
-            
+        bboxes, kpss = self.det_model.detect(img,
+                                             threshold=self.det_thresh,
+                                             max_num=max_num,
+                                             metric='default')
         # bbox가 0이면 0 리턴
-        # if bboxes.shape[0] == 0:
-        #     return []
-        if len(faces) == 0 : 
+        if bboxes.shape[0] == 0:
             return []
         ret = []
         # 각각의 box에 대한 결과 추출
-        for i in range(len(bboxlist)):
+        for i in range(bboxes.shape[0]):
             # bbox 추출
-            #bbox = bboxes[i, 0:4]
-            bbox = bboxlist[i]
-            #det_score = bboxes[i, 4]
-            det_score = scorelist[i]
+            bbox = bboxes[i, 0:4]
+            det_score = bboxes[i, 4]
             kps = None
-            # if kpss is not None:
-            #     kps = kpss[i]
-            if kpslist is not None:
-                kps = kpslist[i]
+            if kpss is not None:
+                kps = kpss[i]
             embedding = None
             normed_embedding = None
             embedding_norm = None
 
             # face recognition
-            #if 'recognition' in self.models:
-            assert kps is not None
-            rec_model = self.models['recognition']
-            aimg = norm_crop(img, landmark=kps)
-            
-            embedding = None
-            embedding_norm = None
-            normed_embedding = None
-            
-            # 임베딩 값 추출
-            embedding = rec_model.get_feat(aimg).flatten()
-            embedding_norm = norm(embedding)
-            normed_embedding = embedding / embedding_norm
+            if 'recognition' in self.models:
+                assert kps is not None
+                rec_model = self.models['recognition']
+                aimg = norm_crop(img, landmark=kps)
+                print(kps)
+                embedding = None
+                embedding_norm = None
+                normed_embedding = None
+                # 임베딩 값 추출
+                embedding = rec_model.get_feat(aimg).flatten()
+                embedding_norm = norm(embedding)
+                normed_embedding = embedding / embedding_norm
 
             # face에 결과를 담음
             face = Face(bbox=bbox,
@@ -151,6 +119,7 @@ class FaceAnalysis:
                         embedding_norm=embedding_norm)
             ret.append(face)
         return ret
+        
 
     # 사각형 그리기
     def draw_on(self, img, faces):

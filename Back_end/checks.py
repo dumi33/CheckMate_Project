@@ -6,6 +6,9 @@ from s3_img import *
 from s3_img import s3_connection
 from config import AWS_S3_BUCKET_NAME
 from tkinter import filedialog
+from io  import BytesIO
+from deepface import DeepFace
+import uuid
 
 import os # aim_model이 같은 디렉토리에 있어서 path를 앞에 붙임 
 import sys
@@ -20,10 +23,59 @@ mydb = conn.CHECKMATE
 Class =mydb.Class
 Student =mydb.Student
 Attendance =mydb.Attendance
+CaptureImg =mydb.CaptureImg
 
 
 s3 = s3_connection()
 s4 = s4_connection() # read_image_from_s4 이용을 위해 
+
+## 날짜에 입력된 파일 이름 값 불러오기 
+@blue_check.route("/fortest/<int:classIdx>",methods=['GET'])
+def fortest3(classIdx) :
+    if request.method =='GET' :
+        x = dt.datetime.now()
+        date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
+        urlList = [1,2]
+        CaptureImg.update_one({"classIdx" : classIdx}, 
+                {   "$set" :
+                    {date : urlList}
+                }
+        ) 
+        #capture_imgList=list(Class.find({"classIdx" : classIdx},{"_id" : 0, "captureImg":1}))
+        # capture_imgList=list(CaptureImg.find({"classIdx" : classIdx},{date : {'$exists' : True}}))
+        capture_imgList = CaptureImg.find({"$and":[ {date:{"$exists": True}}, {"classIdx":classIdx}]})
+        #capture_imgList=list(CaptureImg.find({"classIdx" : classIdx},{"_id" : 0, date:1}))
+        print(len(list(capture_imgList)))
+        
+        #result =capture_imgList[0].values()
+        #result=list(result)[0]
+        #capture_imgList=capture_imgList[date]
+        
+        return make_response(jsonify(SUCCESS=True ),200)
+
+## Deepface가 경로가 아닌 이미지로 비교할 수 있을까?
+@blue_check.route("/hii",methods=['GET'])
+def fortest2() :
+    if request.method =='GET' :
+        #img=read_image_from_s3(s3,'fortest.jpg')
+        # file_name = os.getcwd() +'\capture_img.png' 
+        # img = Image.open(file_name)
+        # img.show()
+        #handle_upload_img(s3,'irene')
+        img=read_image_from_s4(s4,'capture_image/irene.jpg')
+
+        buffer = BytesIO()
+        img.save(buffer, "JPEG")
+        buffer.seek(0)
+        
+        url_generator = str(uuid.uuid4()) 
+        result = DeepFace.verify(img1_path = img, img2_path = "december.jpg")
+        print(result)
+
+        
+        return make_response(jsonify(SUCCESS=True),200)
+    
+    
 # 캡쳐  
 # for test 
 @blue_check.route("/hi",methods=['GET'])
@@ -33,35 +85,92 @@ def fortest() :
         # file_name = os.getcwd() +'\capture_img.png' 
         # img = Image.open(file_name)
         # img.show()
-        handle_upload_img(s3,'irene')
+        #handle_upload_img(s3,'irene')
+        img=read_image_from_s4(s4,'capture_image/irene.jpg')
+
+        buffer = BytesIO()
+        img.save(buffer, "JPEG")
+        buffer.seek(0)
+        
+        url_generator = str(uuid.uuid4()) 
+        handle_upload_img2(s3,buffer,url_generator)
 
         
         return make_response(jsonify(SUCCESS=True),200)
-
-        
-
 
 # 캡쳐  
 # /checks
-@blue_check.route("/",methods=['POST'])
-def CreateCapture() :
-    if request.method =='POST' :
+@blue_check.route("/hhi",methods=['GET'])
+def CreateCaptureimgfortest() :
+    if request.method =='GET' :
         
         img = ImageGrab.grab()
-        img.save('capture_img.jpg')
-        file_name = os.getcwd() +'\capture_img.jpg'
-        s3.upload_file(s3,'capture_img')
+        img.save('hi.jpg')
+        file_name = os.getcwd() +'\hi.jpg'
+        handle_upload_img(s3,'hi')
         # if os.path.isfile(file_name):
         #     os.remove(file_name) 
         return make_response(jsonify(SUCCESS=True),200)
+        
+###################################################
+
+# 캡쳐  
+# /checks
+@blue_check.route("/<int:classIdx>",methods=['POST'])
+def CreateCapture(classIdx) :
+    if request.method =='POST' :
+        
+        img = ImageGrab.grab()
+        url_generator = str(uuid.uuid4()) 
+        img.save(url_generator+'.jpg') # 로컬에 저장 
+        
+        handle_upload_img(s3,url_generator) # s3에 저장 
+        x = dt.datetime.now()
+        date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
+        
+        url_generatorList = []
+        url_generatorList.append(url_generator)
+        isexist = list(CaptureImg.find({"$and":[ {date:{"$exists": True}}, {"classIdx":classIdx}]}))
+        if len(isexist)==0 :  # 이미지를 처음 저장 
+            CaptureImg.update_one({"classIdx" : classIdx}, 
+                {   "$set" :
+                    {date : url_generatorList}
+                }
+        ) 
+            
+        else : # 이미지 처음 저장이 아님 
+            CaptureImg.update_one({"classIdx" : classIdx}, 
+                {   "$push" :
+                    {date : url_generator}
+                }
+            ) 
+        
+        # #capture_imgList=list(CaptureImg.find({"classIdx" : classIdx},{"_id" : 0, date:1}))
+    
+        
+        #file_name = os.getcwd() +'\capture_img.jpg'
+        
+        # if os.path.isfile(file_name):
+        #     os.remove(file_name) 
+        return make_response(jsonify(url=url_generator),200)
     
 # 캡쳐 이미지 주소 반환 
 # /checks/img
-@blue_check.route("/img",methods=['GET'])
-def GetCapture() :
+@blue_check.route("/img/<int:classIdx>",methods=['GET'])
+def GetCapture(classIdx) :
     if request.method =='GET' :
-        url=s3_get_image_url(s3,'capture_img')
-        return make_response(jsonify(img_url=url),200)
+        x = dt.datetime.now()
+        date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
+        
+        capture_imgList=list(CaptureImg.find({"classIdx" : classIdx},{"_id" : 0, date:1}))
+        result =capture_imgList[0].values()
+        result=list(result)[0]
+        
+        img_url_list = []
+        for name in result : 
+            img_url_list.append(s3_get_image_url(s3,name))
+    
+        return make_response(jsonify(img_url=img_url_list),200)
 
     
 # 출석체크  
