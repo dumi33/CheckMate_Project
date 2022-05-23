@@ -71,6 +71,7 @@
                 console.log(res.data.img_url)
                 this.img = res.data.img_url
             })
+            console.log(this.img_url)
         },
         // 출석체크
         CheckStd() {
