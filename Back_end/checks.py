@@ -122,6 +122,7 @@ def CreateCapture(classIdx) :
         
         img = ImageGrab.grab()
         url_generator = str(uuid.uuid4()) 
+        img = img.convert("RGB")
         img.save(url_generator+'.jpg') # 로컬에 저장 
         
         handle_upload_img(s3,url_generator) # s3에 저장 
