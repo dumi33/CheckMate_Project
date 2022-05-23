@@ -68,7 +68,7 @@
         },
         GetCaptureImage(){
             axios.get('http://localhost:8080/checks/img/' +  this.$route.query.classIdx).then((res)=>{
-                console.log(res.data.img_url)
+                console.log(res.data)
                 this.img = res.data.img_url
             })
             console.log(this.img_url)

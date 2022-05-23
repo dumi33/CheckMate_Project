@@ -14,6 +14,7 @@
         <svg style="cursor:pointer" @click="selectUploadFile()" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
           <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
         </svg>
+        <hr>
         <div class ="student_list">
           <tr v-for="studentItem in studentList" v-bind:key="studentItem.studentIdx">
             <td id ="std_name">{{studentItem.name}}</td>
@@ -59,6 +60,7 @@
           console.log(this.classIdx)
           axios.post('http://localhost:8080/students/' + this.classIdx).then((res) => {
             console.log(res.data)
+            this.studentList = res.data.data
           })
         },
         // 메인 화면 이동
@@ -122,6 +124,13 @@
     margin-right: 30px;
     margin-top: 10px;
     width: 60%;
+}
+
+.student_reg hr{
+  border : 0px;
+  border-top:4px dotted #7171e09a;
+  margin-left:4px;
+  margin-right:4px;
 }
 
 .student_reg p {
