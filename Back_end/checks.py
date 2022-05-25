@@ -1,3 +1,4 @@
+from sre_constants import SUCCESS
 from flask import Blueprint, make_response, render_template, request, jsonify, redirect
 import pymongo
 from PIL import ImageGrab, Image
@@ -9,12 +10,15 @@ from tkinter import filedialog
 from io  import BytesIO
 from deepface import DeepFace
 import uuid
+from retinaface import RetinaFace
+import matplotlib.pyplot as plt
 
 import os # aim_model이 같은 디렉토리에 있어서 path를 앞에 붙임 
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from ai_model import Embedding
+from ai_model import forRetinaFace
 
 blue_check=Blueprint("check", __name__, url_prefix="/checks")
 
@@ -35,18 +39,13 @@ def fortest3(classIdx) :
     if request.method =='GET' :
         x = dt.datetime.now()
         date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
-        urlList = [1,2]
-        CaptureImg.update_one({"classIdx" : classIdx}, 
-                {   "$set" :
-                    {date : urlList}
-                }
-        ) 
         #capture_imgList=list(Class.find({"classIdx" : classIdx},{"_id" : 0, "captureImg":1}))
         # capture_imgList=list(CaptureImg.find({"classIdx" : classIdx},{date : {'$exists' : True}}))
-        capture_imgList = CaptureImg.find({"$and":[ {date:{"$exists": True}}, {"classIdx":classIdx}]})
+        capture_imgList = CaptureImg.find({"$and":[ {date:{"$exists": True}}, {"classIdx":classIdx}]},{"_id" : 0, date:1})
         #capture_imgList=list(CaptureImg.find({"classIdx" : classIdx},{"_id" : 0, date:1}))
-        print(len(list(capture_imgList)))
-        
+        capture_imgList=list(capture_imgList)
+        capture_imgList = capture_imgList[0].values()
+        capture_imgList = list(capture_imgList)[0]
         #result =capture_imgList[0].values()
         #result=list(result)[0]
         #capture_imgList=capture_imgList[date]
@@ -114,18 +113,22 @@ def CreateCaptureimgfortest() :
         
 ###################################################
 
+#cap_num = 0
 # 캡쳐  
 # /checks
 @blue_check.route("/<int:classIdx>",methods=['POST'])
 def CreateCapture(classIdx) :
     if request.method =='POST' :
-        
+        #global cap_num
         img = ImageGrab.grab()
         url_generator = str(uuid.uuid4()) 
         img = img.convert("RGB")
         img.save(url_generator+'.jpg') # 로컬에 저장 
+        #img.save('capture_Img{}'.format(cap_num)+'.jpg') # 로컬에 저장
+        #cap_num +=1 
         
         handle_upload_img(s3,url_generator) # s3에 저장 
+        
         x = dt.datetime.now()
         date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
         
@@ -173,34 +176,51 @@ def GetCapture(classIdx) :
     
         return make_response(jsonify(img_url=img_url_list),200)
 
+
+
+def extract_capture_img_url(classIdx) : 
+    x = dt.datetime.now()
+    date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
+    capture_imgList = CaptureImg.find({"$and":[ {date:{"$exists": True}}, {"classIdx":classIdx}]},{"_id" : 0, date:1})
+    capture_imgList=list(capture_imgList)
+    capture_imgList = capture_imgList[0].values()
+    capture_imgList = list(capture_imgList)[0]
+    return capture_imgList
     
 # 출석체크  
 # /checks/attendance/<classIdx>
 @blue_check.route("/attendance/<int:classIdx>",methods=['POST'])
 def CreatesCheck(classIdx) :
     if request.method =='POST' :
-        capture_addr = os.getcwd() +'\capture_img.png'
-        data = list(Class.find({"classIdx" : classIdx})) # 해당 클래스정보 
-        student_img_addr = data[0]['studentImgAddr'] # 해당 클래스의 학생 이미지 경로
-        # 학생들의 임베딩값 추출 & 출석확인
-        students =Embedding.Create_Check(student_img_addr, capture_addr) # 출석한 학생의 레이블 
-        print("출석한 학생은 {}명입니다.".format(students))
+        url = extract_capture_img_url(classIdx)
+        print("캡처된 이미지는 {}장 입니다.".format(len(url)))
+        students = []
+        for i in range(len(url)) :  # 캡처한 사진 개수만큼 
+            capture_addr = url[i] + '.jpg'
+            data = list(Class.find({"classIdx" : classIdx})) # 해당 클래스정보 
+            student_img_addr = data[0]['studentImgAddr'] # 해당 클래스의 학생 이미지 경로
+            
+            # 학생들의 임베딩값 추출 & 출석확인
+            #students =Embedding.Create_Check(student_img_addr, capture_addr) # 출석한 학생의 레이블 
+            #print("출석한 학생은 {}명입니다.".format(students))
+            
+            students.extend(forRetinaFace.reidentification(capture_addr,student_img_addr))
         classStudentList=list(Student.find({"classIdx" : classIdx},{"_id" : 0, "name":1}))
-        
+        print("출석한 학생은 {}입니다.".format(students))
         studentList = [] # 학생의 이름만을 추출 
         for i in range(len(classStudentList)) :
-            studentList.append(classStudentList[i]['name'])
-            
+            studentList.append((classStudentList[i]['name'].rsplit('.')[0])) # 확장자 제거 
+        
         noattendance = list(set(studentList) - set(students)) # 모든 학생 중 안온학생을 구함 
         print("출석하지 않은 학생은 {}입니다.".format(noattendance))
-        
+            
         x = dt.datetime.now()
         date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
         Attendance.update_one({"classIdx" : classIdx}, # 날짜와 출석하지 않은 학생 DB에 저장 
                 {   "$set" :
-                    {date : noattendance }
+                        {date : noattendance }
                 }
-            ) 
+        ) 
         
         return make_response(jsonify(출석=students,미출석=noattendance),200)
     
