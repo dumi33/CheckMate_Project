@@ -46,7 +46,7 @@ def s4_connection():
 # 로컬에 있는 이미지 업로드 
 def handle_upload_img(s3,f): # f = 파일명
 	response = s3.upload_file(
-            os.getcwd()+'\\'+f+'.jpg',
+            os.getcwd()+'/'+f+'.jpg',
             AWS_S3_BUCKET_NAME, 
             'capture_image/'+f+'.jpg',
             ExtraArgs={ # url을 통해 Read (not download)
