@@ -4,7 +4,7 @@ import pymongo
 blue_class=Blueprint("class", __name__, url_prefix="/classes")
 
 
-conn = pymongo.MongoClient('mongodb://user:checkmate12!@3.39.108.76:27017')
+conn = pymongo.MongoClient('mongodb://user:checkmate12!@54.180.17.138:27017')
 mydb = conn.CHECKMATE
 Class =mydb.Class
 Attendance =mydb.Attendance

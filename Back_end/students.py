@@ -5,7 +5,7 @@ from tkinter import filedialog
 blue_student=Blueprint("student", __name__, url_prefix="/students")
 
 
-conn = pymongo.MongoClient('mongodb://user:checkmate12!@3.39.108.76:27017')
+conn = pymongo.MongoClient('mongodb://user:checkmate12!@54.180.17.138:27017')
 # conn = pymongo.MongoClient()
 mydb = conn.CHECKMATE
 Student =mydb.Student

@@ -22,7 +22,7 @@ from ai_model import forRetinaFace
 
 blue_check=Blueprint("check", __name__, url_prefix="/checks")
 
-conn = pymongo.MongoClient('mongodb://user:checkmate12!@3.39.108.76:27017')
+conn = pymongo.MongoClient('mongodb://user:checkmate12!@54.180.17.138:27017')
 mydb = conn.CHECKMATE
 Class =mydb.Class
 Student =mydb.Student
