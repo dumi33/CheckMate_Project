@@ -61,13 +61,13 @@
     methods: {
         // 화면 전체 캡처
         CaptureImage() {
-            axios.post('http://localhost:8080/checks/'+ this.$route.query.classIdx).then((res)=> {
+            axios.post('http://172.31.35.46:8080/checks/'+ this.$route.query.classIdx).then((res)=> {
                 console.log(res)
             })
             this.GetCaptureImage()
         },
         GetCaptureImage(){
-            axios.get('http://localhost:8080/checks/img/' +  this.$route.query.classIdx).then((res)=>{
+            axios.get('http://172.31.35.46:8080/checks/img/' +  this.$route.query.classIdx).then((res)=>{
                 console.log(res.data)
                 this.img = res.data.img_url
             })
@@ -75,7 +75,7 @@
         },
         // 출석체크
         CheckStd() {
-            axios.post('http://localhost:8080/checks/attendance/'+ this.$route.query.classIdx).then((res)=> {
+            axios.post('http://172.31.35.46:8080/checks/attendance/'+ this.$route.query.classIdx).then((res)=> {
                 console.log(res.data)
                 this.StdList = res.data
                 this.checkStdList = res.data.출석
