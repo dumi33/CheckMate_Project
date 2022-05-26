@@ -88,7 +88,7 @@ def s3_get_image_url(s3, filename):
     filename : s3에 저장된 파일 명
     '''
     location = s3.get_bucket_location(Bucket=AWS_S3_BUCKET_NAME)["LocationConstraint"]
-    return f"https://{AWS_S3_BUCKET_NAME}.s3.{location}.amazonaws.com/{filename}.jpg"
+    return f"https://{AWS_S3_BUCKET_NAME}.s3.{location}.amazonaws.com/capture_image/{filename}.jpg"
 
 
 """
