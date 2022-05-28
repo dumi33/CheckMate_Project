@@ -71,7 +71,7 @@
                 console.log(res.data)
                 this.img = res.data.img_url
             })
-            console.log(this.img_url)
+            console.log('img: ', this.img)
         },
         // 출석체크
         CheckStd() {
@@ -91,10 +91,11 @@
             }
         },PreviousImage() {
             console.log('previous')
-            if(this.now_img > this.img.length) {
-                this.now_img = this.now_img - 1
+            console.log(this.now_img)
+            if(this.now_img < 0) {
+                this.now_img = 0
             } else {
-                this.now_img = this.img.length - 1
+                this.now_img = this.now_img - 1
             }
         },
         // 출석체크 업데이트
