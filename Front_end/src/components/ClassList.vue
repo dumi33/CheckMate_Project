@@ -1,4 +1,5 @@
 <template>
+
 <div>
   <ClassHeader />
   <div class = "class_all">
@@ -11,14 +12,15 @@
             <svg style="cursor:pointer" @click="NextImage()" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
             <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
             </svg>
-            <button style="cursor:pointer" @click ="CaptureImage()" type = "button" id="capture_btn">캡처</button>
-            <img :src='`${img[now_img]}`' />
+            <button style="cursor:pointer" @click ="openPopup()" type = "button" id="capture_btn">캡처</button>
+            <img v-if ="capStatus==true" :src='`${img[now_img]}`' />
         </div>
         <div class = "btn_a">
         <button style="cursor:pointer" type = "button" @click="CheckStd()" id="check_btn">출석확인</button>
         <button style="cursor:pointer" type = "button" @click="ClassHome()" id="home_btn">홈화면</button>
         </div>
     </div>
+
     <div class ="student_list">
         <div class = "check_std">
             <p style="cursor:default">출석 학생 리스트</p>
@@ -35,24 +37,29 @@
         </div>
     </div>
   </div>
-  </div>
+
+</div>
 </template>
 
+
 <script>
+
     import ClassHeader from './common/ClassHeader.vue'
     import axios from 'axios'
+
 
   export default {
     name: 'ClassRegister',
     data: function() {
-      return {
-        // img : require('/Users/namsujin/checkmate_frontend/CheckMate_Project/capture_img.png'),
+        return {
         img : [],
         now_img : 0,
         StdList : [],
         checkStdList : [],
         uncheckStdList : [],
-        className: this.$route.query.className
+        className: this.$route.query.className,
+        capStatus: false,
+        open: localStorage.getItem('open')
       };
     },
     components: {
@@ -60,18 +67,31 @@
     },
     methods: {
         // 화면 전체 캡처
-        CaptureImage() {
-            axios.post('http://localhost:8080/checks/'+ this.$route.query.classIdx).then((res)=> {
-                console.log(res)
-            })
-            this.GetCaptureImage()
+        openPopup(){
+            this.popup = window.open('http://192.168.0.8:8090/newAlter',
+            'Window Capture',
+            "left=2000, top=50, width=350, height=300"
+            )
+            localStorage.setItem('open', 'false')
+            this.open = localStorage.getItem('open')
         },
         GetCaptureImage(){
+            this.capStatus = true
             axios.get('http://localhost:8080/checks/img/' +  this.$route.query.classIdx).then((res)=>{
                 console.log(res.data)
                 this.img = res.data.img_url
             })
             console.log('img: ', this.img)
+            localStorage.setItem('open','false')
+            this.open = localStorage.getItem('open')
+        },
+        CaptureImage() {
+            if(this.open == 'true') {
+                axios.post('http://localhost:8080/checks/'+ this.$route.query.classIdx).then((res)=> {
+                    console.log(res)
+                })
+                this.GetCaptureImage()
+            }
         },
         // 출석체크
         CheckStd() {
@@ -91,8 +111,9 @@
             }
         },PreviousImage() {
             console.log('previous')
-            console.log(this.now_img)
             if(this.now_img < 0) {
+                this.now_img = this.img.length - 1
+            } else if (this.img.length == 0 ) {
                 this.now_img = 0
             } else {
                 this.now_img = this.now_img - 1
@@ -103,7 +124,7 @@
             var result = confirm("출석체크하시겠습니까?");
             if (result) {
                 try {
-                    axios.put("/class/list/" + uncheckId, uncheckId).then((res) => {
+                    axios.put("/classes/list/" + uncheckId, uncheckId).then((res) => {
                         console.log(res.data.success);
                         if (res.data.success == true) {
                             alert("출석체크되었습니다.");
@@ -119,15 +140,19 @@
             }
         },
         ClassHome() {
-          this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
+            localStorage.setItem('open','false')
+            this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
         }
     }, mounted() {
-        window.addEventListener('keydown', (e) => {
-            if(e.keyCode === 37)
+        this.CaptureImage(),
+        window.addEventListener('keypress', (e) => {
+            if(e.key === 37)
                 this.PreviousImage()
-            else if (e.keyCode === 39)
+            else if (e.key === 39)
                 this.NextImage()
         })
+    },created() {
+        this.open = localStorage.getItem('open')
     }
 }
 </script>
@@ -306,5 +331,6 @@ img {
     font-size: 15px;
     border-color: #ffffff7c;
 }
+
 
 </style>

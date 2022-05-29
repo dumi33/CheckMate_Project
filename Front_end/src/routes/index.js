@@ -7,6 +7,7 @@ import ClassRegister from '../components/ClassRegister.vue'
 import CheckList from '../components/CheckList.vue'
 import ClassList from '../components/ClassList.vue'
 import UserPage from '../components/UserPage.vue'
+import AlertModal from '../components/common/AlertModal.vue'
 // import store from '../store';
 
 const router = new createRouter({
@@ -67,6 +68,10 @@ const router = new createRouter({
             path:'/user',
             name:UserPage,
             component:UserPage
+        }, {
+            path:'/newAlter',
+            name:AlertModal,
+            component:AlertModal
         }
     ]
 })
