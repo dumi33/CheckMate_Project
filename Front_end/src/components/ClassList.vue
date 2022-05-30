@@ -68,7 +68,7 @@
     methods: {
         // 화면 전체 캡처
         openPopup(){
-            this.popup = window.open('http://192.168.0.8:8090/newAlter',
+            this.popup = window.open('/newAlter',
             'Window Capture',
             "left=2000, top=50, width=350, height=300"
             )
