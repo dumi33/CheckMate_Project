@@ -46,9 +46,8 @@ export default{
         getClassList() {
           // Http get 메서드로 요청
           // this.$router.query.user_id,
-            let path = "http://localhost:8080/classes/";
             // this.$router.query.user_id
-            axios.get(path + this.$route.query.user_id
+            axios.get("http://localhost:8080/classes/" + this.$route.query.user_id
            ).then((res)=>{
             this.classList = res.data
             console.log(this.classList)

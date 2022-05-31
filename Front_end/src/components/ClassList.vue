@@ -13,7 +13,7 @@
             <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
             </svg>
             <button style="cursor:pointer" @click ="openPopup()" type = "button" id="capture_btn">캡처</button>
-            <img v-if ="capStatus==true" :src='`${img[now_img]}`' />
+            <img v-if ="capStatus" :src='`${capture_img[now_img]}`' />
         </div>
         <div class = "btn_a">
         <button style="cursor:pointer" type = "button" @click="CheckStd()" id="check_btn">출석확인</button>
@@ -52,11 +52,12 @@
     name: 'ClassRegister',
     data: function() {
         return {
-        img : [],
+        capture_img : [],
         now_img : 0,
         StdList : [],
         checkStdList : [],
         uncheckStdList : [],
+        capture_num: 0,
         className: this.$route.query.className,
         capStatus: false,
         open: localStorage.getItem('open')
@@ -75,18 +76,19 @@
             localStorage.setItem('open', 'false')
             this.open = localStorage.getItem('open')
         },
-        GetCaptureImage(){
-            this.capStatus = true
-            axios.get('http://localhost:8080/checks/img/' +  this.$route.query.classIdx).then((res)=>{
+        async GetCaptureImage(){
+            await axios.get('http://localhost:8080/checks/img/' +  this.$route.query.classIdx).then((res)=>{
                 console.log(res.data)
-                this.img = res.data.img_url
+                this.capture_img = res.data.img_url
+                this.capture_img.length = res.data.img_url.length
             })
-            console.log('img: ', this.img)
+            console.log('img: ', this.capture_img)
             localStorage.setItem('open','false')
             this.open = localStorage.getItem('open')
         },
         CaptureImage() {
             if(this.open == 'true') {
+                this.capStatus = true
                 axios.post('http://localhost:8080/checks/'+ this.$route.query.classIdx).then((res)=> {
                     console.log(res)
                 })
@@ -104,20 +106,25 @@
         },
         NextImage() {
             console.log('next')
-            if(this.now_img < this.img.length){
+            if(this.now_img < this.capture_img.length - 1){
                 this.now_img = this.now_img + 1
-            } else {
+            } 
+            else {
                 this.now_img = 0
             }
+            console.log(this.now_img, this.capture_img[this.now_img])
+            console.log(this.capture_img.length)
         },PreviousImage() {
             console.log('previous')
-            if(this.now_img < 0) {
-                this.now_img = this.img.length - 1
-            } else if (this.img.length == 0 ) {
+            if(this.now_img <= 0) {
+                this.now_img = this.capture_img.length - 1
+            } else if (this.capture_img.length == 0 ) {
                 this.now_img = 0
             } else {
                 this.now_img = this.now_img - 1
             }
+            console.log(this.now_img, this.capture_img[this.now_img])
+            console.log(this.capture_img.length)
         },
         // 출석체크 업데이트
         StdCheck(uncheckId) {
@@ -153,6 +160,7 @@
         })
     },created() {
         this.open = localStorage.getItem('open')
+        
     }
 }
 </script>
