@@ -30,7 +30,7 @@ mydb = conn.CHECKMATE
 User = mydb.User
 
 # 버튼을 클릭하면 여기로
-@blue_oauth.route("/url")
+@blue_oauth.route("/url",methods=['GET'])
 def oauth_url_api():
     """
     Kakao OAuth URL 가져오기
@@ -44,7 +44,7 @@ def oauth_url_api():
     #return redirect(kakao_oauth_url)
 
 # redirect된 주소 
-@blue_oauth.route("")
+@blue_oauth.route("",methods=['POST'])
 def oauth_api():
     # 사용자로부터 authorization code를 인자로 받음
     code = str(request.args.get('code'))
