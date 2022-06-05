@@ -21,12 +21,15 @@
 
 
 <script>
+import axios from 'axios'
+
 export default {
     name: 'UserLogin',
     data: function() {
         return {
             user_id : '',
-            user_pw : ''
+            user_pw : '',
+            kakao_url : ''
         };
     },
     methods: {
@@ -56,6 +59,11 @@ export default {
         },
         LoginUserRegister(){
             this.$router.push('/register')
+        },
+        KakaoLogin() {
+            axios.get('http://localhost:8080/oauth/url').then((res)=> {
+                this.kakao_url = res.data.kakao_oauth_url
+            })
         }
     },
     mounted() {
