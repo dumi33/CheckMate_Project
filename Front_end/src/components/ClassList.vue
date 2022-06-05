@@ -174,7 +174,10 @@
 #all {
     width: 100%;
   height: 100vh;
-    background: linear-gradient(180deg, rgba(208, 62, 221, 0.47) 0.01%, rgba(255, 255, 255, 0.616062) 68.75%, rgba(255, 255, 255, 0.47) 100%);
+    background: linear-gradient(180deg, 
+    rgba(208, 62, 221, 0.47) 0.01%, 
+    rgba(255, 255, 255, 0.616062) 68.75%, 
+    rgba(255, 255, 255, 0.47) 100%);
 }
 
 img {

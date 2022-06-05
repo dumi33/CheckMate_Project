@@ -60,10 +60,9 @@ export default {
         LoginUserRegister(){
             this.$router.push('/register')
         },
-        Kakao_login() {
-            axios.get('http://localhost:8080/oauth/url').then((res)=> {
-                console.log(res)
-            })
+        async Kakao_login() {
+            const response = await axios.get('http://localhost:8080/oauth/url')
+            console.log(response)
         }
     },
     mounted() {
