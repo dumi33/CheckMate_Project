@@ -35,13 +35,13 @@ def oauth_url_api():
     """
     Kakao OAuth URL 가져오기
     """
-    #kakao_oauth_url="https://kauth.kakao.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code" \
-    #   % (CLIENT_ID, REDIRECT_URI)
-    return jsonify(
-        kakao_oauth_url="https://kauth.kakao.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code" \
-        % (CLIENT_ID, REDIRECT_URI)
-    )
-    #return redirect(kakao_oauth_url)
+    kakao_oauth_url="https://kauth.kakao.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code" \
+       % (CLIENT_ID, REDIRECT_URI)
+    #return jsonify(
+    #    kakao_oauth_url="https://kauth.kakao.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code" \
+    #    % (CLIENT_ID, REDIRECT_URI)
+    #)
+    return redirect(kakao_oauth_url)
 
 # redirect된 주소 
 @blue_oauth.route("",methods=['POST'])
