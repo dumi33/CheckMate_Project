@@ -1,2 +1,4 @@
-for i in range(0,2) :
-    print(i)
+import os 
+dir_path = os.getcwd()
+dir_image_path = os.path.join(dir_path,'irene.jpg')
+print(dir_image_path)

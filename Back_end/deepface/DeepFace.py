@@ -468,8 +468,11 @@ def analyze(img_path, actions = ('emotion', 'age', 'gender', 'race') , models = 
 
 		return resp_obj
 
-def find(img_path, db_path, model_name ='VGG-Face', distance_metric = 'cosine', model = None, enforce_detection = True, detector_backend = 'opencv', align = True, prog_bar = True, normalization = 'base', silent=False):
+def find(img_path, db_path, model_name ='VGG-Face', distance_metric = 'cosine', model = None, enforce_detection = True, detector_backend = 'opencv', align = True, prog_bar = True, normalization = 'base', silent=True): # warning 보려면 silent를 False로 
 
+	import warnings
+	warnings.filterwarnings("ignore")
+ 
 	"""
 	This function applies verification several times and find an identity in a database
 

@@ -5,15 +5,15 @@ import pymongo
 class UserModel:
     
     def __init__(self):
-        conn = pymongo.MongoClient()
+        conn = pymongo.MongoClient('mongodb://user:checkmate12!@54.180.17.138:27017')   
         mydb = conn.CHECKMATE
-        User = mydb.Users
+        User = mydb.User
 
     #  유저 생성 
     def upsert_user(self, user):
-        conn = pymongo.MongoClient()
+        conn = pymongo.MongoClient('mongodb://user:checkmate12!@54.180.17.138:27017')
         mydb = conn.CHECKMATE
-        User = mydb.Users
+        User = mydb.User
         docs = User.find({'id':{'$eq' : user.id}})
         if len(list(docs)) == 0: # 이미 생성한 유저가 아니라면 
             User.insert_one(user.serialize())
