@@ -1,10 +1,15 @@
 <template>
-
-<div>
-  <ClassHeader />
+<div id="all">
+  <ClassHeader/>
   <div class = "class_all">
     <div class ="class_list">
+        <div class="title_list">
         <h2 style="cursor:default">{{className}}</h2>
+        <svg id = "home_btn" style="cursor:pointer" @click="ClassHome()" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-house-heart-fill" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.707L8 2.207l6.646 6.646a.5.5 0 0 0 .708-.707L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
+            <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Zm0 5.189c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.691 0-5.018Z"/>
+      </svg>
+      </div>
         <div class="class_capture">
             <svg style="cursor:pointer" @click="PreviousImage()" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
             <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
@@ -17,7 +22,6 @@
         </div>
         <div class = "btn_a">
         <button style="cursor:pointer" type = "button" @click="CheckStd()" id="check_btn">출석확인</button>
-        <button style="cursor:pointer" type = "button" @click="ClassHome()" id="home_btn">홈화면</button>
         </div>
     </div>
 
@@ -32,7 +36,7 @@
                 <p style="cursor:default">결석 학생 리스트</p>
                 <tr id = "uncheck_db_list" v-for="(uncheckItem, index) in uncheckStdList" v-bind:key="index">
                     <td>{{ uncheckItem }}</td>
-                    <button type = "button" @click="StdCheck(uncheckItem.id)" id ="stdcheck_btn">관리</button>
+                    <button type = "button" @click="StdCheck(uncheckItem.id)" id ="stdcheck_btn">추가</button>
                 </tr>
         </div>
     </div>
@@ -44,7 +48,7 @@
 
 <script>
 
-    import ClassHeader from './common/ClassHeader.vue'
+    import ClassHeader from './common/ClassHeader_color.vue'
     import axios from 'axios'
 
 
@@ -167,18 +171,10 @@
 
 <style scoped>
 
-.class_all {
+#all {
     width: 100%;
-}
-
-.class_list {
-    width:60%;
-    float:left;
-}
-
-.student_list {
-    width:40%;
-    float:right;
+  height: 100vh;
+    background: linear-gradient(180deg, rgba(208, 62, 221, 0.47) 0.01%, rgba(255, 255, 255, 0.616062) 68.75%, rgba(255, 255, 255, 0.47) 100%);
 }
 
 img {
@@ -190,20 +186,30 @@ img {
     height: 400px;
 }
 
+.title_list {
+    position: absolute;
+    top:150px;
+    left:40px;
+    height: 300px;
+}
+
 .class_list h2 {
-    border: 5px dotted #4949E8  ;
-    border-color: #7171e09a;
+    writing-mode: tb-rl;
     color:#4949E8;
-    margin-top: 30px;
-    margin-left: 50px;
-    margin-bottom: 20px;
     text-align: center;
-    padding-top:4px;
-    width: 40%;
-    font-size: 35px;
+    font-size: 45px;
+}
+
+#home_btn {
+    margin-left: 50px;
+    margin-top: 10px;
+    color: #4949E8;
 }
 
 .class_capture {
+    position: absolute;
+    top:120px;
+    left:160px;
     border-radius: 5px;
     border-top: none;
     border-left: none;
@@ -212,7 +218,13 @@ img {
     margin-left : 50px;
     text-align: center;
     font-size: 25px;
-    width: 80%;
+    width: 800px;
+    height: 600px;
+}
+
+.class_capture img{
+    width: 750px;
+    margin-top: 10px;
     height: 500px;
 }
 
@@ -255,32 +267,28 @@ img {
 
 
 #check_btn {
+    position: absolute;
+    top: 730px;
+    left: 520px;
     display: inline-block;
     background:linear-gradient(to bottom, #4949e87c,#4949e8d0);
     color: white;
     height: 50px;
-    width: 30%;
+    width: 200px;
     border-radius: 5px;
     font-size: 25px;
     border-color: #ffffff7c;  
 }
 
-#home_btn {
-    display: inline-block;
-    background:linear-gradient(to bottom, #4949e87c,#4949e8d0);
-    color: white;
-    height: 50px;
-    width: 30%;
-    border-radius: 5px;
-    font-size: 25px;
-    border-color: #ffffff7c;  
-    margin-left: 20px;
-}
+
 
 .check_std{
+    position: absolute;
+    top:100px;
+    left:1030px;
     border: 4px solid;
     border-radius: 5px;
-    border-color: #7171e09a;
+    border-color: #6262da;
     margin-top:30px;
     margin-left:10px;
     margin-right:20px;
@@ -288,9 +296,12 @@ img {
 }
 
 .uncheck_std{
+    position: absolute;
+    top:100px;
+    left:1250px;
     border: 4px solid;
     border-radius: 5px;
-    border-color: #7171e09a;
+    border-color: #6262da;
     margin-top:30px;
     margin-left:10px;
     margin-right:20px;
@@ -300,7 +311,7 @@ img {
 .check_std p {
     display: block;
     margin: 10px;
-    margin-left: 30px;
+    width: 180px;
     font-size: 20px;
     font-weight: bold;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
@@ -308,25 +319,25 @@ img {
 
 #check_db_list {
     display: block;
-    margin: 10px;
-    margin-left: 60px;
+    margin: 20px;
+    margin-top: 18px;
     font-size: 15px;
 }
 
 .uncheck_std p {
     display: block;
     margin: 10px;
-    margin-left: 30px;
     font-size: 20px;
+    width: 200px;
     font-weight: bold;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
 }
 
 #uncheck_db_list {
     display: block;
-    margin: 10px;
-    margin-left: 60px;
-    font-size: 15px;
+    margin: 20px;
+    margin-top: 20px;
+    font-size: 18px;
 }
 
 #stdcheck_btn{

@@ -1,10 +1,11 @@
 <template>
-<div>
+<div id ='all'>
   <ClassHeader />
     <div class ="class_reg">
-        <input v-if="isClicked" v-model = 'class_name' type ="text" name = "class_name" id="class_name" placeholder="수업 이름 입력">
+      <h2> 수업 등록 </h2>
+        <input v-if="isClicked" v-model = 'class_name' type ="text" name = "class_name" id="class_name" placeholder="Class Name">
         <p v-else >{{this.class_name}}</p>
-      <svg style="cursor:pointer" @click="registerClassName()" id = "name_btn" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+      <svg style="cursor:pointer" @click="registerClassName()" id = "name_btn" xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
       </svg>
@@ -16,8 +17,8 @@
         </svg>
         <hr>
         <div class ="student_list">
-          <tr v-for="studentItem in studentList" v-bind:key="studentItem.studentIdx">
-            <td id ="std_name">{{studentItem.name}}</td>
+          <tr class = "flex_container" v-for="studentItem in studentList" v-bind:key="studentItem.studentIdx">
+            <td class="flex_item"  style="cursor:default" id ="std_name">{{studentItem.name}}</td>
           </tr>
         </div>
     </div>
@@ -36,7 +37,8 @@
         studentList : [],
         response: '',
         classIdx: '',
-        isClicked: true
+        isClicked: true,
+        classList: []
       };
     },
     components: {
@@ -73,24 +75,41 @@
 
 <style scoped>
 
+#all {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(180deg, 
+  #4949E8 0%, rgba(74, 74, 220, 0.850791) 31.77%, 
+  rgba(74, 74, 218, 0.824091) 53.65%, 
+  rgba(153, 67, 220, 0.616062) 89.58%, 
+  rgba(208, 62, 221, 0.47) 100%);
+}
+
 .class_reg {
-    border: 4px solid;
-    border-radius: 5px;
-    border-color: #7171e09a;
-    margin: 30px;
-    margin-right:10px;
-    width: 30%;
-    display: inline-block;
+  position: absolute;
+  top:100px;
+  left:50px;
+  margin: 30px;
+  margin-right:10px;
+  width: 400px;
+}
+
+.class_reg h2{
+  display: inline-block;
+  color: white;
+  font-weight: bold;
+  font-size: 60px;
 }
 
 .class_reg p {
   font-weight: bold;
   display: inline-block;
-  background-color: rgba( 255, 255, 255, 0 );
+  background-color: rgba(255, 255, 255, 0);
   margin: 10px;
   text-align: center;
-  font-size: 25px;
-  width: 70%;
+  font-size: 35px;
+  width: 220px;
+  margin-left: 50px;
 }
 
 .class_reg input[type=text] {
@@ -98,75 +117,105 @@
     border-left: none;
     border-right: none;
     background-color: rgba( 255, 255, 255, 0 );
-    border-bottom: 3px solid #7171e09a;
+    border-bottom: 3px dotted #ffffff;
     margin: 10px;
+    margin-left:50px;
     text-align: center;
-    font-size: 25px;
-    width: 70%;
+    font-size: 35px;
+    width: 220px;
+    color: #ffffff;
     font-weight: bold;
 }
 
 #name_btn{
-  color: #4949e8d0;
+  color: #ffffffd0;
   padding-top:10px;
-  border-color: #ffffff7c;  
+  border-color: #ffffff7c;
 }
 
 .class_reg input::placeholder {
-    color: #6b6b92;
+    color: #b6b6ff;
 }
 
 .student_reg {
-    border: 4px solid;
-    border-radius: 5px;
-    border-color: #7171e09a;
-    margin-left: 30px;
-    margin-right: 30px;
-    margin-top: 10px;
-    width: 60%;
+  position: absolute;
+  left:45%;
+  top:100px;
+  border-radius: 5px;
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-top: 10px;
 }
 
 .student_reg hr{
   border : 0px;
-  border-top:4px dotted #7171e09a;
+  border-top:4px dotted #9898f59a;
   margin-left:4px;
   margin-right:4px;
 }
 
 .student_reg p {
     display: inline-block;
+    color:white;
     margin: 10px;
     margin-left: 30px;
-    font-size: 27px;
+    font-size: 35px;
     font-weight: bold;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
 }
 
 .student_reg svg {
-    color: #4949E8;
-    float: right;
-    margin: 10px;
+  color: #ffffff;
+  padding-top:7px;
 }
 
 #reg_btn {
-    background:linear-gradient(to bottom, #4949e87c,#4949e8d0);
-    color: white;
-    height: 50px;
-    width: 300px;
-    border-radius: 5px;
-    font-size: 25px;
-    border-color: #ffffff7c;  
-    position: absolute;
-    top: 70%;
-    left:40%;
+  position: absolute;
+  background:white;
+  color: #4949e8d0;
+  height: 50px;
+  width: 200px;
+  border-radius: 5px;
+  border-color: #ffffff7c;  
+  position: absolute;
+  font-size: 25px;
+  font-weight: bold;
+  top: 70%;
+  left:45%;
 }
 
 .student_list {
-    margin: 5px;
-    margin-left: 45px;
-    font-size: 20px;
-    font-weight: bold;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+  margin: 5px;
+  margin-left: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  width:600px;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+}
+
+.flex_container{
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap:wrap;
+  justify-content: space-around;
+}
+
+.flex_item {
+  margin: 15px;
+  padding: 10px;
+  width: 100px;
+  height: 50px;
+  border-radius: 5px;
+  background: white;
+  color: #4949e8d0;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  box-shadow: 2px 2px 2px #e8e8ff7c;
 }
 
 </style>

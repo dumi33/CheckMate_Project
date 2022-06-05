@@ -3,7 +3,7 @@
         <header>
             <div class ="head_lan">
             <div class = main-nav-left> 
-            <img id="menu_img" src="../../icons/menu.svg" alt="menu">
+            <img id="menu_img" src="../../icons/menu_color.svg" alt="menu">
             <div class = "sub-menu">
                 <div class ="class_menu">
                 <h3 style="cursor:default">출석부</h3>
@@ -15,13 +15,13 @@
             </div>
             </div>
             </div>
-            <img style="cursor:pointer" @click="ClassMain()" id="title_img" src="../../icons/title.svg" alt="title">
+            <img style="cursor:pointer" @click="ClassMain()" id="title_img" src="../../icons/title_color.svg" alt="title">
             </div>
             <ul class="menu">
-                <li><router-link to='/login'><img id="logout_img" src="../../icons/logout.svg" alt="logout"></router-link></li>
+                <li><router-link to='/login'><img id="logout_img" src="../../icons/logout_color.svg" alt="logout"></router-link></li>
                 <li style="cursor:default" id="mypage">{{ name }}</li>
                 <li id ="icon">
-                <img style="cursor:pointer" @click="UserPage()" id="user_img" src="../../icons/user.svg" alt="user">
+                <img style="cursor:pointer" @click="UserPage()" id="user_img" src="../../icons/user_color.svg" alt="user">
                 </li>
             </ul>
         </header>
@@ -162,7 +162,7 @@ export default{
     .head .menu li {
         float: right;
         display: inline;
-        color: white;
+        color: #4949E8;
         padding: 8px;
         font-size: 15px;
     }
@@ -174,7 +174,7 @@ export default{
     }
 
     #mypage {
-        border-bottom: 0.5px solid white;
+        border-bottom: 0.5px solid #4949E8;
         padding: 0px;
         font-weight: bold;
         margin-left: 5px;

@@ -1,19 +1,16 @@
 <template>
-<div>
+<div id="all">
   <ClassHeader />
   <div class ="set_class">
       <h2 style="cursor:default">{{className}}</h2>
-      <svg style="cursor:pointer" @click="ClassMain()" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-house-heart-fill" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.707L8 2.207l6.646 6.646a.5.5 0 0 0 .708-.707L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
-        <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Zm0 5.189c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.691 0-5.018Z"/>
-      </svg>
+      <hr>
   </div>
   <div class ="get_student">
     <p style="cursor:default">학생 출결 현황</p>
     <button style="cursor:pointer" type = "button" id="excel_btn" @click="DownloadCheckExcel()">EXCEL</button>
-    <table id = "std_list" border ="1" >
-      <tr align="center" bgcolor="white">
-        <th></th>
+    <table id = "std_list" >
+      <tr align="center" >
+        <th>학생</th>
         <th v-for="(value, key) in uncheckstds" v-bind:key="key">
           {{key}}
         </th>
@@ -23,14 +20,16 @@
         <td v-for="(value, key) in uncheckstds" v-bind:key="key">
           <span v-for="(v, k) in value" v-bind:key="k">
             <span v-if="stdlist.name == v">
-              <p>x</p>
+              <span v-if="checkresult">
+                <p>결석</p>
+              </span>
             </span>
           </span>
         </td>
       </tr>
     </table>
   </div>
-  <div class ="check_list">
+  <!-- <div class ="check_list">
       <p style="cursor:default" id = "check_header">결석 학생 리스트</p>
       <button style="cursor:pointer" type = "button" id="excel_btn" @click="DownloadUncheckExcel()">EXCEL</button>
     <table id = "check_list" border ="1">
@@ -47,12 +46,12 @@
         </td>
       </tr>
   </table>
-  </div>
+  </div> -->
   </div>
 </template>
 
 <script>
-  import ClassHeader from './common/ClassHeader.vue'
+  import ClassHeader from './common/ClassHeader_left.vue'
   import axios from 'axios'
   import * as XLSX from 'xlsx'
   export default {
@@ -63,7 +62,8 @@
         stdlists : [],
         checkstds : [],
         uncheckstds: [],
-        checkstatus: true
+        checkstatus: true,
+        checkresult: false
       }
     },
     components: {
@@ -80,8 +80,12 @@
         GetCheckList() {
             axios.get('http://localhost:8080/checks/attendance/'+ this.$route.query.classIdx).then((res)=> {
                 this.uncheckstds = res.data[0]
-                console.log(this.uncheckstds)
+                console.log("checklist", this.uncheckstds)
             })
+            let i = 0
+            for(i;i<this.uncheckstds.length;i++){
+              console.log("list",this.uncheckstds[i])
+            }
         },
         ClassMain() {
           this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
@@ -111,52 +115,90 @@
 
 <style scoped>
 
+#all {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(270.09deg, 
+  #6161E0 35.85%, 
+  rgba(104, 144, 247, 0.47) 80.26%, 
+  rgba(255, 255, 255, 0.47) 90.93%);
+}
+
 .set_class {
-    margin: 30px;
-    margin-bottom:10px;
-    width:60%;
+  position: absolute;
+  top:200px;
+  left:50px;
+  width: 300px;
 }
 
 .set_class h2 {
-  border: 5px dotted #4949E8  ;
-  border-color: #7171e09a;
   color:#4949E8;
-  margin-top: 30px;
-  margin-left: 50px;
-  margin-bottom: 20px;
-  text-align: center;
-  padding-top:4px;
-  width: 40%;
-  font-size: 35px;
-  display: inline-block;
+  text-align: left;
+  font-size: 50px;
+  margin: 0;
 }
 
-.set_class svg {
-  margin-left: 20px;
-  color:#4949E8;
+.set_class hr{
+  border : 0px;
+  border-top:3px solid #4949E8;
+  margin-top: 0px;
+  margin-left: 0;
+  width: 40%;
 }
 
 .get_student {
-    border: 4px solid;
-    border-radius: 5px;
-    border-color: #7171e09a;
-    margin-left: 30px;
-    margin-right: 30px;
-    margin-top: 10px;
-    margin-bottom: 30px;
-    display: block;
-    width: 60%;
+  position: absolute;
+  left:400px;
+  top: 100px;
+  margin-bottom: 30px;
+  display: block;
 }
 
 .get_student p {
     display: inline-block;
-    margin: 10px;
-    margin-left: 30px;
-    font-size: 27px;
+    margin: 20px;
+    color: white;
+    margin-left: 100px;
+    font-size: 30px;
     font-weight: bold;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
 }
 
+#std_list {
+  display: block;
+  border: 0;
+  color:white;
+  margin-left: 150px;
+  width: 1000px;
+  margin-top: 20px;
+}
+
+#std_list th{
+  font-size: 20px;
+  border-left: 1px solid white;
+  padding: 5px;
+}
+
+#std_list td{
+  font-size: 20px;
+  border-top: 1px solid white;
+  border-left: 1px solid white;
+  padding: 5px;
+  text-align: center;
+}
+
+#std_list td:first-child{
+  border-left:none;
+}
+
+#std_list th:first-child{
+  border-left:none;
+}
+
+#std_list p{
+  font-size: 20px;
+  text-align: center;
+}
 
 .check_list {
   display: block;
@@ -191,14 +233,7 @@
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
 }
 
-#std_list {
-  display: block;
-  border-radius: 5px;
-  border-color: #7171e09a;
-  margin-left: 30px;
-  margin-right: 30px;
-  margin-bottom: 10px;
-}
+
 
 #check_list {
   display: block;
@@ -210,14 +245,14 @@
 }
 
 #excel_btn {
-    background:linear-gradient(to bottom, #4949e87c,#2d2de4d0);
-    color: white;
-    height: 25px;
+    background:white;
+    color: #4949E8;
+    height: 30px;
     border-radius: 5px;
-    font-size: 15px;
+    font-size: 20px;
+    font-weight: bold;
     border-color: #ffffff7c;
-    margin-right: auto;
-    margin-left: 20px;
+    margin-left: 10px;
     text-align: center;
 }
 
