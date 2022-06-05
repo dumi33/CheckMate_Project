@@ -62,7 +62,7 @@ export default {
         },
         KakaoLogin() {
             axios.get('http://localhost:8080/oauth/url').then((res)=> {
-                this.kakao_url = res.data.kakao_oauth_url
+                console.log(res)
             })
         }
     },
