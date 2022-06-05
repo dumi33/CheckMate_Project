@@ -12,7 +12,7 @@
         <div class="login_submit">
             <button style="cursor:pointer" type = "button" @click="LoginCreate()" id="login_btn" value="로그인">로그인</button>
             <button style="cursor:pointer" type = "button" @click="LoginUserRegister()" id="register_btn" value="회원가입">회원가입</button>
-            <img style="cursor:pointer" src="../assets/kakao_img.png" id="kakao_image">
+            <img style="cursor:pointer" @click="Kakao_login()" src="../assets/kakao_img.png" id="kakao_image">
         </div>
     </div>
     </div>
