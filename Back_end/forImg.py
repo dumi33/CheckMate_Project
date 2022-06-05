@@ -1,4 +1,2 @@
-import pyautogui
-img_capture = pyautogui.screenshot("Run_icon.png")
-
-img_capture.show()
+for i in range(0,5) :
+    print(i)

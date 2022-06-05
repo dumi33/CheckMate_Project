@@ -50,6 +50,8 @@ def CreateStduent(classIdx) :
         studentList = []
         studentIdxlist = []
         for i in range(len(label)) :
+            if label[i] == 'representations' :  # 이미지 controlfile(?)일경우 저장 X 
+                continue
             seq = getNextSequenceSTD()
             student= {"studentIdx" : seq,
                     "name": label[i],

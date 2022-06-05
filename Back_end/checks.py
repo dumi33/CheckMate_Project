@@ -156,7 +156,7 @@ def CreateCapture(classIdx) :
         
         # if os.path.isfile(file_name):
         #     os.remove(file_name) 
-        return make_response(jsonify(url=url_generator),200)
+        return make_response(jsonify(url=url_generatorList),200)
     
 # 캡쳐 이미지 주소 반환 
 # /checks/img
@@ -167,8 +167,14 @@ def GetCapture(classIdx) :
         date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
         
         capture_imgList=list(CaptureImg.find({"classIdx" : classIdx},{"_id" : 0, date:1}))
+        print('capture imglist : ')
+        print(capture_imgList)
         result =capture_imgList[0].values()
+        print('result 1 : ')
+        print(result)
         result=list(result)[0]
+        print('result 2 : ')
+        print(result)
         
         img_url_list = []
         for name in result : 
@@ -206,23 +212,28 @@ def CreatesCheck(classIdx) :
             
             students.extend(forRetinaFace.reidentification(capture_addr,student_img_addr))
         classStudentList=list(Student.find({"classIdx" : classIdx},{"_id" : 0, "name":1}))
-        print("출석한 학생은 {}입니다.".format(students))
-        studentList = [] # 학생의 이름만을 추출 
-        for i in range(len(classStudentList)) :
-            studentList.append((classStudentList[i]['name'].rsplit('.')[0])) # 확장자 제거 
         
-        noattendance = list(set(studentList) - set(students)) # 모든 학생 중 안온학생을 구함 
-        print("출석하지 않은 학생은 {}입니다.".format(noattendance))
+        if len(classStudentList) == 0 : 
+            print("수업에 등록된 학생이 없습니다.")
+            return make_response(jsonify(SUCCESS=False),400)
+        else  :
+            print("출석한 학생은 {}입니다.".format(students))
+            studentList = [] # 학생의 이름만을 추출 
+            for i in range(len(classStudentList)) :
+                studentList.append((classStudentList[i]['name'].rsplit('.')[0])) # 확장자 제거 
             
-        x = dt.datetime.now()
-        date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
-        Attendance.update_one({"classIdx" : classIdx}, # 날짜와 출석하지 않은 학생 DB에 저장 
-                {   "$set" :
-                        {date : noattendance }
-                }
-        ) 
-        
-        return make_response(jsonify(출석=students,미출석=noattendance),200)
+            noattendance = list(set(studentList) - set(students)) # 모든 학생 중 안온학생을 구함 
+            print("출석하지 않은 학생은 {}입니다.".format(noattendance))
+                
+            x = dt.datetime.now()
+            date = str(x.year)+"년 "+str(x.month)+"월 "+str(x.day) + "일"
+            Attendance.update_one({"classIdx" : classIdx}, # 날짜와 출석하지 않은 학생 DB에 저장 
+                    {   "$set" :
+                            {date : noattendance }
+                    }
+            ) 
+            
+            return make_response(jsonify(출석=students,미출석=noattendance),200)
     
     
 # 출석 학생 확인   

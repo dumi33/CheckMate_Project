@@ -29,13 +29,12 @@ app = Flask(__name__) # 객체 생성
 CORS(app, resources={r'*': {'origins': '*'}})
  
 
-conn = pymongo.MongoClient('mongodb://user:checkmate12!@3.39.108.76:27017')
-# conn = pymongo.MongoClient()
+conn = pymongo.MongoClient('mongodb://user:checkmate12!@54.180.17.138:27017')
 mydb = conn.CHECKMATE
 Class =mydb.Class
 Student =mydb.Student
-User = mydb.Users
-ClassList = mydb.ClassList
+Attendance =mydb.Attendance
+CaptureImg =mydb.CaptureImg
 
 
 # 버튼을 클릭하면 여기로 
@@ -87,29 +86,6 @@ def oauth_api():
 @app.route("/")
 def hello() :
     return "<h1>HELLO CHECKMATE!</h1>"
-
-
-# 캡쳐  
-@app.route("/checks",methods=['POST'])
-def CreateCapture() :
-    if request.method =='POST' :
-        img = ImageGrab.grab()
-        img.save('capture_img.png')
-        
-        return make_response(jsonify(SUCCESS=True),200)
-    
-
-# 출석확인  
-@app.route("/checks/attendance/<int:classIdx>",methods=['GET'])
-def CreatesCheck(classIdx) :
-    if request.method =='GET' :
-        capture_addr = 'C:/Users/dumi3/checkmate_project2/CheckMate_Project/capture_img.png'
-        data = list(Class.find({"classIdx" : classIdx})) # 해당 클래스정보 
-        student_img_addr = data[0]['studentImgAddr'] # 해당 클래스의 학생 이미지 경로
-        # 학생들의 임베딩값 추출 & 출석확인
-        Embedding.Create_Check(student_img_addr, capture_addr)
-        return make_response(jsonify(SUCCESS=True),200)
-
     
 
 if __name__ == "__main__" :

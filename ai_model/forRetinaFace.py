@@ -6,6 +6,9 @@ import tensorflow as tf
 import cv2
 from deepface import DeepFace
 
+from inference_realesrgan import *
+
+
 
 detectors = ['opencv', 'mtcnn', 'retinaface']
 models = ['VGG-Face', 'Facenet', 'Facenet512', 'ArcFace', 'SFace']
@@ -40,16 +43,30 @@ def reidentification (img_path1,addr_path ) :
     #addr_path = "C:" + "/" + "img_for_checkmate"
     print("캡처이미지에 있는 학생은 {}명입니다.".format(len(faces)))
     attendent_student = []
-    for idx,face in enumerate(faces) : 
+    
+    # 학생들의 이미지가 Face_img 폴더에 저장됨 
+    for idx,face in enumerate(faces) : # 1부터 시작 
         plt.imshow(face)
-        plt.savefig('face{}.jpg'.format(idx))
+        plt.savefig('Face_img/face{}.jpg'.format(idx+1)) # 저장 
+        
+        # real esr gan
+        dir_path = os.getcwd()
+        dir_image_path = os.path.join(dir_path,'Face_img/face{}.jpg'.format(idx+1))
+        print(dir_image_path)
+        # 시간이 너무 오래걸림 
+        #real_esrgan(input=dir_image_path,outscale=3.5, suffix='')
+        
 
-    for i in range(0,length) : 
-        df = DeepFace.find('face{}.jpg'.format(i), db_path =addr_path) 
-        full_name=df['identity'][0] # 가장 닮은 인물만 넣는다.
-        end=full_name.find('.')
-        start = [n for n in range(len(full_name)) if full_name.find('/', n) == n]
-        attendent_student.append(full_name[start[-1]+1:end])
+
+    for i in range(1,length+1) : 
+        df = DeepFace.find('Face_img/face{}.jpg'.format(i), db_path =addr_path) 
+        try :
+            full_name=df['identity'][0] # 가장 닮은 인물만 넣는다.
+            end=full_name.find('.')
+            start = [n for n in range(len(full_name)) if full_name.find('/', n) == n]
+            attendent_student.append(full_name[start[-1]+1:end])
+        except KeyError :
+            continue
         
         
         # 아래 코드는 여러명이 제안 되었을 때 모두 반환함 
