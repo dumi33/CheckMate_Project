@@ -5,6 +5,7 @@ import checks,oauths
 from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 CORS(app, resources={r'*': {'origins': '*'}})
 app.register_blueprint(students.blue_student)
 app.register_blueprint(classes.blue_class)
