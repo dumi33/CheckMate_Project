@@ -119,8 +119,8 @@ body {
 #user_img3 {
     position: absolute;
     bottom: 30px;
-    left: 470px;
-    width:600px;
+    left: 490px;
+    width:650px;
 }
 
 #user_img4 {
