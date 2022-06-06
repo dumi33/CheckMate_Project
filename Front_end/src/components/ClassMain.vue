@@ -10,7 +10,20 @@
     <svg style="cursor:pointer" @click="ClassRegister()" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
       <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
     </svg>
-    <p class="explain" style="cursor:default">설명</p>
+    <span class="explain" style="cursor:default">
+      <div class="sentence">
+      <img id="point_img2" src="../icons/point.svg"> <p> 수업 등록 버튼을 클릭하여 본인의 수업을 등록하세요</p>
+      </div>
+      <div class="sentence">
+      <img id="point_img2" src="../icons/point.svg"> <p> 수업을 클릭하여 출석체크 화면으로 이동하세요</p>
+      </div>
+      <div class="sentence">
+      <img id="point_img2" src="../icons/point.svg"> <p> 수업 중인 화면을 캡처한 뒤, 출석체크 버튼을 클릭하여 출석체크를 완료하세요 </p>
+      </div>
+      <div class="sentence">
+      <img id="point_img2" src="../icons/point.svg"> <p> 출석부를 확인하세요 </p>
+      </div>
+    </span>
   </div>
   <div class ="reg_list">
       <img id="search_bar_img" src="../icons/search_bar.svg">
@@ -252,6 +265,22 @@ import ClassHeader from './common/ClassHeader.vue'
 }
 #delete_btn {
     margin-left:5px;
+}
+
+#point_img2{
+  display: inline-block;
+  width: 22px;
+  margin-top: 10px;
+}
+
+.explain p{
+  display: inline-block;
+  margin: 0;
+  margin-top: 10px;
+}
+
+.sentence{
+  display: block;
 }
 
 </style>

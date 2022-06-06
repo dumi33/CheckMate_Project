@@ -10,7 +10,7 @@
     <button style="cursor:pointer" type = "button" id="excel_btn" @click="DownloadCheckExcel()">EXCEL</button>
     <table id = "std_list" >
       <tr align="center" >
-        <th>학생</th>
+        <th>학생 이름</th>
         <th v-for="(value, key) in uncheckstds" v-bind:key="key">
           {{key}}
         </th>
@@ -19,10 +19,8 @@
         <td>{{stdlist.name}}</td>
         <td v-for="(value, key) in uncheckstds" v-bind:key="key">
           <span v-for="(v, k) in value" v-bind:key="k">
-            <span v-if="stdlist.name == v">
-              <span v-if="checkresult">
-                <p>결석</p>
-              </span>
+            <span v-if="stdlist.name === v">
+              {{result}}
             </span>
           </span>
         </td>
@@ -59,11 +57,10 @@
     data : function() {
       return {
         className : this.$route.query.className,
-        stdlists : [],
         checkstds : [],
+        stdlists : [],
         uncheckstds: [],
-        checkstatus: true,
-        checkresult: false
+        result: '결석'
       }
     },
     components: {
@@ -73,19 +70,18 @@
         GetStudent() {
             axios.get('http://localhost:8080/students/'+ this.$route.query.classIdx).then((res)=> {
                 this.stdlists = res.data
+                console.log(res)
                 console.log(this.stdlists)
             })
         },
       //학생 출석 리스트 출력
         GetCheckList() {
+          console.log('check')
             axios.get('http://localhost:8080/checks/attendance/'+ this.$route.query.classIdx).then((res)=> {
                 this.uncheckstds = res.data[0]
+                console.log(res)
                 console.log("checklist", this.uncheckstds)
             })
-            let i = 0
-            for(i;i<this.uncheckstds.length;i++){
-              console.log("list",this.uncheckstds[i])
-            }
         },
         ClassMain() {
           this.$router.push({path: '/classes', query : {user_id:this.$route.query.user_id}});
@@ -107,7 +103,7 @@
             XLSX.writeFile(workBook, '결석_학생_리스트.xlsx');
         }, 
     }, mounted() {
-      this.GetStudent();
+      this.GetStudent(),
       this.GetCheckList();
     }
   }
@@ -174,24 +170,27 @@
 }
 
 #std_list th{
-  font-size: 20px;
-  border-left: 1px solid white;
-  padding: 5px;
+  font-size: 21px;
+  background: white;
+  font-weight: bold;
+  border-top: 2px solid #b3b3ff8e;
+  border-left: 2px solid #b3b3ff8e;
+  color: rgb(86, 131, 253);
+  border-radius: 4px;
+  padding: 10px;
 }
 
 #std_list td{
   font-size: 20px;
-  border-top: 1px solid white;
-  border-left: 1px solid white;
-  padding: 5px;
+  color: white;
+  font-weight: bold;
+  border-bottom: 2px solid #ffededa6;
+  border-left: 2px solid #ffededa6;
+  padding: 7px;
   text-align: center;
 }
 
 #std_list td:first-child{
-  border-left:none;
-}
-
-#std_list th:first-child{
   border-left:none;
 }
 

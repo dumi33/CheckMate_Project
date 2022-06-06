@@ -1,11 +1,21 @@
 <template>
 <body>
     <div class = "login_all">
+        <div class="photo">
+            <img id="user_img4" src="../icons/user4.svg">
+            <img id="user_img1" src="../icons/user1.svg">
+            <img id="user_img2" src="../icons/user2.svg">
+            <img id="user_img3" src="../icons/user3.svg">
+            
+        </div>
     <div class = "login_block">
-        <h2 style="cursor:default">CheckMate</h2>
+        
+        <div class="login_block2">
+            <img id="title_img" src="../icons/title_color.svg" alt="title">
         <div class = "login_id">
             <input type ="text" ref = "login_id" name = "login_id" id="login_id" v-model = "user_id" placeholder="ID">
         </div>
+        
         <div class ="login_pw">
             <input type ="text" ref = "login_pw" name = "login_pw" id="login_pw" v-model = "user_pw" placeholder="Password">
         </div>
@@ -14,6 +24,7 @@
             <button style="cursor:pointer" type = "button" @click="LoginUserRegister()" id="register_btn" value="회원가입">회원가입</button>
             <img style="cursor:pointer" @click="Kakao_login()" src="../assets/kakao_img.png" id="kakao_image">
         </div>
+    </div>
     </div>
     </div>
 </body>
@@ -76,6 +87,8 @@ export default {
 * {
     box-sizing: border-box;
     font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -86,35 +99,72 @@ body {
     width: 100%;
     height: 100vh;
     background-size: cover;
-    background:linear-gradient(to bottom, #7171e031,#4949E8);
+    background: linear-gradient(250.94deg, 
+    #8053FF 40.94%, 
+    rgba(255, 255, 255, 0.47) 40.94%);
+}
+
+#user_img1 {
+    position: absolute;
+    top:50px;
+    width: 400px;
+    left: 20px;
+}
+#user_img2 {
+    position: absolute;
+    bottom:100px;
+    left: 30px;
+    width:700px;
+}
+#user_img3 {
+    position: absolute;
+    bottom: 30px;
+    left: 470px;
+    width:600px;
+}
+
+#user_img4 {
+    position: absolute;
+    top: 30px;
+    left: 300px;
+    width:500px;
 }
 
 .login_block {
-    width: 300px;
-    background-color: rgba( 255, 255, 255, 0.5 );
-    margin-right: auto;
-    margin-left: auto;
-    padding: 20px;
-    border-radius: 5px;
-    position: relative;
-    top: 100px;
+    position: absolute;
+    left: 70%;
+    top:125px;
+    width: 350px;
 }
 
-.login_block h2 {
-    font-size: 30px;
-    text-align: center;
-    color: #4949e8da;
+.login_block2 {
+    background-color: rgba( 255, 255, 255, 0.5 );
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#title_img {
+    width: 300px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .login_block input[type=text] {
     border-top: none;
     border-left: none;
     border-right: none;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
     background-color: rgba( 255, 255, 255, 0 );
     border-bottom: 3px solid #7171e09a;
-    margin: 10px;
-    font-size: 15px;
-    width: 240px;
+    font-size: 20px;
+    width: 270px;
+    margin-top: 30px;
+
 }
 
 .login_block input::placeholder {
@@ -122,7 +172,7 @@ body {
 }
 
 .login_pw {
-    margin-bottom: 40px;
+    margin-bottom: 50px;
 }
 
 .login_block button {
@@ -151,7 +201,9 @@ button:active {
 #kakao_image {
     margin-top: 20px;
     text-align: center;
-    margin-left: 5px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
     width:250px;
     height: 40px;
     box-shadow: 3px 3px 3px #eed601;

@@ -1,9 +1,16 @@
 <template>
     <body>
         <div class ="register_all">
+        <div class="photo">
+            <img id="user_img1" src="../icons/user1.svg">
+            <img id="user_img4" src="../icons/user4.svg">
+            <img id="user_img2" src="../icons/user2.svg">
+            <img id="user_img3" src="../icons/user3.svg">
+            
+        </div>
         <div class = "register">
-            <h2 style="cursor:default">CheckMate</h2>
             <div class = "reg_name">
+                <img id="title_img" src="../icons/title_color.svg" alt="title">
                 <input ref = "reg_name" v-model="reg_name" type ="text" name = "reg_name" id="reg_name" placeholder="Name">
             </div>
             <div class ="reg_email">
@@ -95,7 +102,9 @@ export default {
     width: 100%;
     height: 100vh;
     background-size: cover;
-    background:linear-gradient(to bottom, #7171e031,#4949E8);
+        background: linear-gradient(250.94deg, 
+    #8053FF 40.94%, 
+    rgba(255, 255, 255, 0.47) 40.94%);
 }
 
 body {
@@ -109,14 +118,18 @@ body {
     margin-left: auto;
     padding: 20px;
     border-radius: 5px;
-    position: relative;
-    top: 100px;
+    position: absolute;
+    left: 70%;
+    top:125px;
+    width: 350px;
 }
-
-.register h2 {
-    font-size: 30px;
-    text-align: center;
-    color: #4949e8da;
+#title_img {
+    width: 300px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .register input[type=text] {
@@ -125,9 +138,12 @@ body {
     border-right: none;
     background-color: rgba( 255, 255, 255, 0 );
     border-bottom: 3px solid #7171e09a;
-    margin: 10px;
-    margin-bottom: 15px;
-    font-size: 15px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    font-size: 20px;
     width: 240px;
 }
 
