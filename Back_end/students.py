@@ -41,7 +41,6 @@ def getNextSequenceSTD() :
 @blue_student.route("/<int:classIdx>",methods=['POST']) # 라우팅경로
 def CreateStduent(classIdx) :
     if request.method =='POST' :
-        print("his")
         label = []
         Img_students_addr = AddStduentImg() # 학생들의 사진 폴더를 선택 
         evaluation_labels = os.listdir(Img_students_addr) # 사진들의 이름을 추출 
@@ -50,17 +49,18 @@ def CreateStduent(classIdx) :
         studentList = []
         studentIdxlist = []
         for i in range(len(label)) :
+            
             if label[i] == 'representations' :  # 이미지 controlfile(?)일경우 저장 X 
                 continue
             seq = getNextSequenceSTD()
             student= {"studentIdx" : seq,
-                    "name": label[i],
+                    "name": label[i][0], # 이름이 한글자인 경우 
                     "classIdx" : classIdx,
                     "status" : 'active'}
             
             Student.insert_one({
                     "studentIdx" : seq,
-                    "name": label[i],
+                    "name": label[i][0], # 이름이 한글자인 경우 
                     "classIdx" : classIdx,
                     "status" : 'active'}) 
             
