@@ -17,7 +17,7 @@
         </div>
         
         <div class ="login_pw">
-            <input type ="text" ref = "login_pw" name = "login_pw" id="login_pw" v-model = "user_pw" placeholder="Password">
+            <input type ="password" ref = "login_pw" name = "login_pw" id="login_pw" v-model = "user_pw" placeholder="Password">
         </div>
         <div class="login_submit">
             <button style="cursor:pointer" type = "button" @click="LoginCreate()" id="login_btn" value="로그인">로그인</button>
@@ -166,6 +166,22 @@ body {
     margin-top: 30px;
 
 }
+
+.login_block input[type=password] {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: rgba( 255, 255, 255, 0 );
+    border-bottom: 3px solid #7171e09a;
+    font-size: 20px;
+    width: 270px;
+    margin-top: 30px;
+
+}
+
 
 .login_block input::placeholder {
     color: #a0a0d4;

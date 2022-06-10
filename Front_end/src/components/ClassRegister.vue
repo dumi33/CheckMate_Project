@@ -104,7 +104,8 @@
 .class_reg p {
   font-weight: bold;
   display: inline-block;
-  background-color: rgba(255, 255, 255, 0);
+  overflow: visible;
+  color: white;
   margin: 10px;
   text-align: center;
   font-size: 35px;
